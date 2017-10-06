@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>WingtipMultiTenantDB</Name>
+    <Name>WingtipSingleDatabaseAppDB</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{934671f2-b265-4b54-8a8e-0df25970de92}</ProjectGuid>
@@ -12,8 +12,8 @@
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>WingtipMultiTenantDB</RootNamespace>
-    <AssemblyName>WingtipMultiTenantDB</AssemblyName>
+    <RootNamespace>WingtipSingeDatabaseAppDB</RootNamespace>
+    <AssemblyName>WingtipSingeDatabaseAppDB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -61,13 +61,11 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\StoredProcedures" />
     <Folder Include="dbo\Views" />
-    <Folder Include="DemoScripts" />
     <Folder Include="SetupScripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\StoredProcedures\sp_CpuLoadGenerator.sql" />
     <Build Include="dbo\StoredProcedures\sp_DeleteEvent.sql" />
-    <Build Include="dbo\StoredProcedures\sp_RemoveShardManagement.sql" />
     <Build Include="dbo\StoredProcedures\sp_ResetEventDates.sql" />
     <Build Include="dbo\Tables\Countries.sql" />
     <Build Include="dbo\Tables\Customers.sql" />
@@ -86,9 +84,5 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="SetupScripts\PostDeployment.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SetupScripts\TenantInitialization.sql" />
-    <None Include="WingtipMultiTenantDB.publish.xml" />
   </ItemGroup>
 </Project>

@@ -58,8 +58,6 @@ namespace Events_Tenant.Common.Utilities
         public string TenantCulture { get; set; }
         public List<CountryModel> TenantCountries { get; set; }
         public string User { get; set; }
-        public string DatabaseName { get; set; }
-        public string DatabaseServerName { get; set; }
     }
 
 }

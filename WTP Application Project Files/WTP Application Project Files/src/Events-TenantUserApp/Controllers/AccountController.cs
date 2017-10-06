@@ -47,7 +47,7 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
 
                     if (tenantDetails != null)
                     {
@@ -123,7 +123,7 @@ namespace Events_TenantUserApp.Controllers
                     return RedirectToAction("Index", "Events", new { tenant });
                 }
 
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);

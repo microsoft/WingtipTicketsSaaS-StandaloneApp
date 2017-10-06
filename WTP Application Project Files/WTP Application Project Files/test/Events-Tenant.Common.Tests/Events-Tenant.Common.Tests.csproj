@@ -130,11 +130,8 @@
   <ItemGroup>
     <Compile Include="UtilitiesTests\UtilitiesTests.cs" />
     <Compile Include="MockRepositories\MockTenantRepository.cs" />
-    <Compile Include="MockRepositories\MockCatalogRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoriesTests\TenantRepositoryTests.cs" />
-    <Compile Include="RepositoriesTests\CatalogRepositoryTests.cs" />
-    <Compile Include="ShardingTests\ShardingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

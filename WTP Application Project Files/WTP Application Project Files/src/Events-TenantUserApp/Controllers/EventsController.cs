@@ -34,7 +34,7 @@ namespace Events_TenantUserApp.Controllers
             {
                 if (!string.IsNullOrEmpty(tenant))
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
                     if (tenantDetails != null)
                     {
                         SetTenantConfig(tenantDetails.VenueId);

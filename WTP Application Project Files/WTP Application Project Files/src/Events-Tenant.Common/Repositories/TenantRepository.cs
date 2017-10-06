@@ -189,7 +189,7 @@ namespace Events_Tenant.Common.Repositories
             return null;
         }
 
-        public async Task<VenuesModel> GetVenue(string tenantName)
+        public async Task<VenuesModel> GetVenueByName(string tenantName)
         {
             var tenants = await _tenantDbContext.Venues.Where(i => Regex.Replace(i.VenueName.ToLower(), @"\s+", "") == tenantName).ToListAsync();
 
@@ -202,7 +202,7 @@ namespace Events_Tenant.Common.Repositories
             return null;
         }
 
-        public async Task<VenuesModel> GetVenueDetails(int tenantId)
+        public async Task<VenuesModel> GetVenueById(int tenantId)
         {
             var venue = await _tenantDbContext.Venues.Where(x => x.VenueId == tenantId).FirstOrDefaultAsync();
             if (venue != null)

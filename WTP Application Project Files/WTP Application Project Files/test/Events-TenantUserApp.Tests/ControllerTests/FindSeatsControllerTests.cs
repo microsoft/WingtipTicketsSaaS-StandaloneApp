@@ -28,8 +28,6 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             mockTenantRepo.Setup(repo => repo.GetEvent(1, 12345)).Returns(GetEventModel());
             mockTenantRepo.Setup(repo => repo.GetEventSections(1, 12345)).Returns(eventSections);
 
-            var mockCatalogRepo = new Mock<ICatalogRepository>();
-
             var seatSectionIds = eventSections.Result.ToList().Select(i => i.SectionId).ToList();
             mockTenantRepo.Setup(r => r.GetSections(seatSectionIds, 12345)).Returns(GetSeatSections());
             mockTenantRepo.Setup(r => r.GetSection(1, 12345)).Returns(GetSection());
@@ -40,7 +38,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
             var mockUtilities = new Mock<IUtilities>();
 
-            _findSeatsController = new FindSeatsController(mockTenantRepo.Object, mockCatalogRepo.Object, localizer, baseLocalizer, logger, configuration);
+            _findSeatsController = new FindSeatsController(mockTenantRepo.Object, localizer, baseLocalizer, logger, configuration);
         }
 
         [Fact]
@@ -95,7 +93,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 Date = DateTime.Now,
                 EventId = 1,
                 EventName = "String Serenades",
-                SubTitle = "Contoso Chamber Orchestra"
+                SubTitle = "Contoso Chamber Orchestra",
+                VenueId = 1976168774
             };
         }
 
@@ -122,13 +121,15 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 {
                     EventId = 1,
                     Price = 100,
-                    SectionId = 1
+                    SectionId = 1,
+                    VenueId = 1976168774
                 },
                 new EventSectionModel
                 {
                     EventId = 2,
                     Price = 1500,
-                    SectionId = 1
+                    SectionId = 1,
+                    VenueId = 1976168774
                 }
             };
         }
@@ -143,7 +144,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     SectionId = 1,
                     SeatsPerRow = 30,
                     SectionName = "Main Auditorium Stage",
-                    StandardPrice = 100
+                    StandardPrice = 100,
+                    VenueId = 1976168774
                 },
                 new SectionModel
                 {
@@ -151,7 +153,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     SectionId = 2,
                     SeatsPerRow = 30,
                     SectionName = "Main Auditorium Middle",
-                    StandardPrice = 80
+                    StandardPrice = 80,
+                    VenueId = 1976168774
                 }
             };
         }
@@ -164,7 +167,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 SectionId = 1,
                 SeatsPerRow = 30,
                 SectionName = "Main Auditorium Stage",
-                StandardPrice = 100
+                StandardPrice = 100,
+                VenueId = 1976168774
             };
         }
 
@@ -173,7 +177,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             return new TicketPurchaseModel
             {
                 CustomerId = 5,
-                PurchaseTotal = 100
+                PurchaseTotal = 100,
+                VenueId = 1976168774
             };
         }
 
@@ -185,7 +190,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 SectionId = 1,
                 EventId = 1,
                 RowNumber = 1000,
-                SeatNumber = 1001
+                SeatNumber = 1001,
+                VenueId = 1976168774
             });
             return t;
         }

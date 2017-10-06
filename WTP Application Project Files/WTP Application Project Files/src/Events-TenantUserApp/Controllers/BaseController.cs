@@ -118,7 +118,7 @@ namespace Events_TenantUserApp.Controllers
                 }
 
                 //get the venue details and populate in config settings
-                var venueDetails = (_tenantRepository.GetVenueDetails(tenantId)).Result;
+                var venueDetails = (_tenantRepository.GetVenueById(tenantId)).Result;
                 var venueTypeDetails =
                     (_tenantRepository.GetVenueType(venueDetails.VenueType, tenantId)).Result;
                 var countries = (_tenantRepository.GetAllCountries(tenantId)).Result;
@@ -129,8 +129,6 @@ namespace Events_TenantUserApp.Controllers
 
                 return new TenantConfig
                 {
-                    DatabaseName = venueDetails.DatabaseName,
-                    DatabaseServerName = venueDetails.DatabaseServerName,
                     VenueName = venueDetails.VenueName,
                     BlobImagePath = blobPath + venueTypeDetails.VenueType + "-user.jpg",
                     EventTypeNamePlural = venueTypeDetails.EventTypeShortNamePlural.ToUpper(),

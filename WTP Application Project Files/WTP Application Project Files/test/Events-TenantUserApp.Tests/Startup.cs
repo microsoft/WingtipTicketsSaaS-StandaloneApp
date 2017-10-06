@@ -20,7 +20,6 @@ namespace Events_TenantUserApp.Tests
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<HomeController, HomeController>();
-            services.AddTransient<ICatalogRepository, CatalogRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
         }
 

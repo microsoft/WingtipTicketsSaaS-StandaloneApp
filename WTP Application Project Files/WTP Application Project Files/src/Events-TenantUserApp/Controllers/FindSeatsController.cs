@@ -42,7 +42,7 @@ namespace Events_TenantUserApp.Controllers
             {
                 if (eventId != 0)
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
                     if (tenantDetails != null)
                     {
                         SetTenantConfig(tenantDetails.VenueId);
@@ -88,7 +88,7 @@ namespace Events_TenantUserApp.Controllers
         {
             try
             {
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);
@@ -135,7 +135,7 @@ namespace Events_TenantUserApp.Controllers
                     PurchaseTotal = Convert.ToDecimal(ticketPrice)
                 };
 
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);

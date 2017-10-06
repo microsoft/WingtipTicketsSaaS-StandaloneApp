@@ -39,42 +39,21 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SectionId = 1,
                     EventId = 1,
                     Price = 100,
-                    VenueId = -1929398168
+                    VenueId = 1976168774
                 },
                 new EventSectionModel
                 {
                     SectionId = 2,
                     EventId = 1,
                     Price = 80,
-                    VenueId = -1929398168
+                    VenueId = 1976168774
                 },
                 new EventSectionModel
                 {
                     SectionId = 3,
                     EventId = 1,
                     Price = 60,
-                    VenueId = -1929398168
-                },
-                new EventSectionModel
-                {
-                    SectionId = 1,
-                    EventId = 1,
-                    Price = 100,
-                    VenueId = 1032943028
-                },
-                new EventSectionModel
-                {
-                    SectionId = 2,
-                    EventId = 1,
-                    Price = 80,
-                    VenueId = 1032943028
-                },
-                new EventSectionModel
-                {
-                    SectionId = 3,
-                    EventId = 1,
-                    Price = 60,
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
 
@@ -87,7 +66,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SectionName = "section 1",
                     StandardPrice = 100,
                     SeatRows = 4,
-                    VenueId = -1929398168
+                    VenueId = 1976168774
                 },
                 new SectionModel
                 {
@@ -96,25 +75,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SectionName = "section 2",
                     StandardPrice = 80,
                     SeatRows = 5,
-                    VenueId = -1929398168
-                },
-                new SectionModel
-                {
-                    SectionId = 1,
-                    SeatsPerRow = 10,
-                    SectionName = "section 1",
-                    StandardPrice = 100,
-                    SeatRows = 4,
-                    VenueId = 1032943028
-                },
-                new SectionModel
-                {
-                    SectionId = 2,
-                    SeatsPerRow = 20,
-                    SectionName = "section 2",
-                    StandardPrice = 80,
-                    SeatRows = 5,
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
 
@@ -126,15 +87,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     PurchaseTotal = 2,
                     TicketPurchaseId = 5,
                     PurchaseDate = DateTime.Now,
-                    VenueId = -1929398168
-                },
-                new TicketPurchaseModel
-                {
-                    CustomerId = 1,
-                    PurchaseTotal = 2,
-                    TicketPurchaseId = 5,
-                    PurchaseDate = DateTime.Now,
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
 
@@ -148,17 +101,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SeatNumber = 50,
                     RowNumber = 2,
                     TicketId = 2,
-                    VenueId = -1929398168
-                },
-                new TicketModel
-                {
-                    SectionId = 1,
-                    EventId = 1,
-                    TicketPurchaseId = 12,
-                    SeatNumber = 50,
-                    RowNumber = 2,
-                    TicketId = 2,
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
 
@@ -170,7 +113,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     EventName = "Event 1",
                     Date = DateTime.Now,
                     SubTitle = "Event 1 Subtitle",
-                    VenueId = -1929398168
+                    VenueId = 1976168774
                 },
                 new EventModel
                 {
@@ -178,23 +121,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     EventName = "Event 2",
                     Date = DateTime.Now,
                     SubTitle = "Event 2 Subtitle",
-                    VenueId = -1929398168
-                },
-                new EventModel
-                {
-                    EventId = 1,
-                    EventName = "Event 1",
-                    Date = DateTime.Now,
-                    SubTitle = "Event 1 Subtitle",
-                    VenueId = 1032943028
-                },
-                new EventModel
-                {
-                    EventId = 2,
-                    EventName = "Event 2",
-                    Date = DateTime.Now,
-                    SubTitle = "Event 2 Subtitle",
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
 
@@ -204,21 +131,11 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                 {
                     CountryCode = "USA",
                     VenueType = "pop",
-                    VenueName = "Test Tenant 1",
+                    VenueName = "Contoso Concert Hall",
                     PostalCode = "123",
-                    AdminEmail = "popadmin@email.com",
+                    AdminEmail = "admin@email.com",
                     AdminPassword = "password",
-                    VenueId = -1929398168
-                },
-                new VenuesModel
-                {
-                    CountryCode = "USA",
-                    VenueType = "jazz",
-                    VenueName = "Test Tenant 2",
-                    PostalCode = "321",
-                    AdminEmail = "jazzadmin@email.com",
-                    AdminPassword = "password",
-                    VenueId = 1032943028
+                    VenueId = 1976168774
                 }
             };
         }
@@ -287,11 +204,20 @@ namespace Events_Tenant.Common.Tests.MockRepositories
             return TicketModels.Where(i => i.VenueId == tenantId).Count();
         }
 
-        public async Task<VenuesModel> GetVenueDetails(int tenantId)
+        public async Task<List<VenuesModel>> GetAllVenues()
+        {
+            return VenuesModels.ToList();
+        }
+
+        public async Task<VenuesModel> GetVenueByName(string tenantName)
+        {
+            return VenuesModels.Where(i => i.VenueName == tenantName).FirstOrDefault();
+        }
+
+        public async Task<VenuesModel> GetVenueById(int tenantId)
         {
             return VenuesModels.Where(i => i.VenueId == tenantId).FirstOrDefault();
         }
-
         public async Task<VenueTypeModel> GetVenueType(string venueType, int tenantId)
         {
             return new VenueTypeModel
@@ -314,6 +240,5 @@ namespace Events_Tenant.Common.Tests.MockRepositories
         {
             return EventModels.Where(i => i.EventId == eventId && i.VenueId == tenantId).FirstOrDefault();
         }
-
     }
 }

@@ -23,12 +23,9 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             var mockTenantRepo = new Mock<ITenantRepository>();
             mockTenantRepo.Setup(repo => repo.GetCustomer("test@email.com", 123456)).Returns(GetCustomerAsync());
             mockTenantRepo.Setup(repo => repo.AddCustomer(GetCustomer(), 123456)).Returns(GetCustomerId());
-
-            var mockCatalogRepo = new Mock<ICatalogRepository>();
-
             var mockUtilities = new Mock<IUtilities>();
 
-            _accountController = new AccountController(localizer, baseLocalizer, mockTenantRepo.Object, mockCatalogRepo.Object, logger, configuration);
+            _accountController = new AccountController(localizer, baseLocalizer, mockTenantRepo.Object, logger, configuration);
 
         }
 

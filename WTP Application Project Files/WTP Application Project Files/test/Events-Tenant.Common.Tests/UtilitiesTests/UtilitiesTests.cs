@@ -9,7 +9,7 @@ namespace Events_Tenant.Common.Tests.UtilitiesTests
         [TestMethod]
         public void GetUser()
         {
-            var host = "events.wtp.bg1.trafficmanager.net";
+            var host = "events.wtp-sd.bg1.trafficmanager.net";
             var hostpieces = host.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
             var user = hostpieces[2];
 

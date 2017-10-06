@@ -25,14 +25,12 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         public HomeControllerTests(ILogger<HomeController> logger)
         {
-            // Arrange
-            var mockCatalogRepo = new Mock<ICatalogRepository>();
             var mockTenantRepo = new Mock<ITenantRepository>();
 
-            mockCatalogRepo.Setup(repo => repo.GetAllTenants()).Returns(GetTenants());
-            mockTenantRepo.Setup(repo => repo.GetVenueDetails(1234646)).Returns(GetVenueDetails());
+            mockTenantRepo.Setup(repo => repo.GetAllVenues()).Returns(GetVenues());
+            mockTenantRepo.Setup(repo => repo.GetVenueById(1234646)).Returns(GetVenueDetails());
 
-            _homeController = new HomeController(mockCatalogRepo.Object, mockTenantRepo.Object, logger);
+            _homeController = new HomeController(mockTenantRepo.Object, logger);
         }
 
 
@@ -61,27 +59,20 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             };
         }
 
-        private async Task<List<TenantModel>> GetTenants()
+        private async Task<List<VenuesModel>> GetVenues()
         {
-            return new List<TenantModel>
+            return new List<VenuesModel>
             {
-                new TenantModel
+                new VenuesModel
                 {
-                    TenantName = "dogwooddojo",
-                    VenueName = "Dogwood Dojo",
-                    ServicePlan = "Standard"
-                },
-                new TenantModel
-                {
-                    TenantName = "contosoconcerthall",
+                    VenueNameInString = "contosoconcerthall",
                     VenueName = "Contoso Concert Hall",
-                    ServicePlan = "Standard"
-                },
-                new TenantModel
-                {
-                    TenantName = "fabrikamjazzclub",
-                    VenueName = "Fabrikam Jazz Club",
-                    ServicePlan = "Standard"
+                    VenueType = "classicalmusic",
+                    VenueId=1976168774,
+                    AdminEmail="admin@contosoconcerthall.com",
+                    AdminPassword=null,
+                    PostalCode="98052",
+                    CountryCode="USA"
                 }
             };
         }

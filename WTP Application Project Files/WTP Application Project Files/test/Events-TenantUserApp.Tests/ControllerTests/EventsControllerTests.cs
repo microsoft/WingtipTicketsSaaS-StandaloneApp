@@ -24,20 +24,15 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         public EventsControllerTests(IStringLocalizer<BaseController> baseLocalizer, ILogger<EventsController> logger, IConfiguration configuration)
         {
-            var mockCatalogRepo = new Mock<ICatalogRepository>();
-            mockCatalogRepo.Setup(repo => repo.GetTenant("testTenant")).Returns(GetTenantModel());
-
-
-
             var mockUtilities = new Mock<IUtilities>();
             var mockTenantRepo = new Mock<ITenantRepository>();
-            mockTenantRepo.Setup(repo => repo.GetVenueDetails(12345)).Returns(GetVenue());
+            mockTenantRepo.Setup(repo => repo.GetVenueByName("testTenant")).Returns(GetVenue());
+            mockTenantRepo.Setup(repo => repo.GetVenueById(12345)).Returns(GetVenue());
             mockTenantRepo.Setup(repo => repo.GetVenueType("Classic", 12345)).Returns(GetVenueType());
             mockTenantRepo.Setup(repo => repo.GetAllCountries(12345)).Returns(GetCountries());
             mockTenantRepo.Setup(repo => repo.GetEventsForTenant(12345)).Returns(GetEvents());
 
-            _eventsController = new EventsController(mockTenantRepo.Object, mockCatalogRepo.Object, baseLocalizer, logger, configuration);
-
+            _eventsController = new EventsController(mockTenantRepo.Object, baseLocalizer, logger, configuration);
         }
 
         [Fact]
@@ -53,18 +48,6 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         }
 
-        private async Task<TenantModel> GetTenantModel()
-        {
-            return new TenantModel
-            {
-                VenueName = "Venue 1",
-                ServicePlan = "Standard",
-                TenantId = 12345,
-                TenantIdInString = "12345",
-                TenantName = "testTenant"
-            };
-        }
-
         private async Task<VenuesModel> GetVenue()
         {
             return new VenuesModel
@@ -72,7 +55,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 VenueName = "Venue 1",
                 PostalCode = "741",
                 CountryCode = "USA",
-                VenueType = "Classic"
+                VenueType = "Classic",
+                VenueId = 1976168774
             };
         }
 
@@ -117,14 +101,16 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     Date = DateTime.Now,
                     EventId = 1,
                     EventName = "String Serenades",
-                    SubTitle = "Contoso Chamber Orchestra"
+                    SubTitle = "Contoso Chamber Orchestra",
+                    VenueId = 1976168774
                 },
                 new EventModel
                 {
                     Date = DateTime.Now,
                     EventId = 2,
                     EventName = "Concert Pops",
-                    SubTitle = "Contoso Symphony"
+                    SubTitle = "Contoso Symphony",
+                    VenueId = 1976168774
                 }
             };
         }
