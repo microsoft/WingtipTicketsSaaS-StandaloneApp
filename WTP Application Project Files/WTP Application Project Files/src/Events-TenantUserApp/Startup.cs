@@ -86,6 +86,8 @@ namespace Events_TenantUserApp
             var provider = services.BuildServiceProvider();
             _utilities = provider.GetService<IUtilities>();
             _tenantRepository = provider.GetService<ITenantRepository>();
+            if (TenantServerConfig.ResetEventDates)
+                _utilities.ResetEventDates(GetTenantConnectionString());
         }
 
         /// <summary>
@@ -206,7 +208,8 @@ namespace Events_TenantUserApp
             {
                 TenantServer = Configuration["TenantServer"] + ".database.windows.net",
                 TenantDatabase = Configuration["TenantDatabase"],
-                ResetEventDates = Convert.ToBoolean(Configuration["ResetEventDates"])
+                ResetEventDates = Convert.ToBoolean(Configuration["ResetEventDates"]),
+                DefaultVenueName = Configuration["DefaultVenueName"],
             };
         }
         #endregion

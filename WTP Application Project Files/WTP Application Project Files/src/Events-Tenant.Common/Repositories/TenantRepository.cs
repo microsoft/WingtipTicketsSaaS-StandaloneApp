@@ -247,11 +247,20 @@ namespace Events_Tenant.Common.Repositories
         {
             using (var context = CreateContext())
             {
+                string databaseName, databaseServerName;
+                using (SqlConnection sqlConn = new SqlConnection(_connectionString))
+                {
+                    databaseName = sqlConn.Database;
+                    databaseServerName = sqlConn.DataSource.Split(':').Last().Split(',').First();
+                }
+
                 var tenants = await context.Venue.Where(i => i.VenueId == tenantId).ToListAsync();
                 if (tenants.Any())
                 {
-                    var tenant = tenants.FirstOrDefault();
-                    return tenant?.ToVenueModel();
+                    var venueModel = tenants.FirstOrDefault()?.ToVenueModel();
+                    venueModel.DatabaseName = databaseName;
+                    venueModel.DatabaseServerName = databaseServerName;
+                    return venueModel;
                 }
             }
             return null;

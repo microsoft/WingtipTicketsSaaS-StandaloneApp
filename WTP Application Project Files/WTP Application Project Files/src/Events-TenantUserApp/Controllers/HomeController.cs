@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using Events_Tenant.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Events_TenantUserApp.Controllers
 {
     public class HomeController : Controller
     {
         #region Fields
-        private readonly ITenantRepository _tenantRepository;
+        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
         #endregion
@@ -20,9 +21,10 @@ namespace Events_TenantUserApp.Controllers
         /// Initializes a new instance of the <see cref="HomeController" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         #endregion
@@ -37,7 +39,7 @@ namespace Events_TenantUserApp.Controllers
         {
             try
             {
-                return RedirectToAction("Index", "Events", new { tenant = "contosoconcerthall" });
+                return RedirectToAction("Index", "Events", new { tenant = _configuration["DefaultVenueName"].ToLower().Replace(" ", "") });
             }
             catch (Exception ex)
             {

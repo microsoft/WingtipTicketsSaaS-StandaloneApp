@@ -32,6 +32,7 @@ namespace Events_Tenant.Common.Utilities
         ///   <c>true</c> if [reset event dates]; otherwise, <c>false</c>.
         /// </value>
         public bool ResetEventDates { get; set; }
+        public string DefaultVenueName { get; set; }
     }
 
     /// <summary>
@@ -48,6 +49,8 @@ namespace Events_Tenant.Common.Utilities
         public string TenantCulture { get; set; }
         public List<CountryModel> TenantCountries { get; set; }
         public string User { get; set; }
+        public string DatabaseName { get; set; }
+        public string DatabaseServerName { get; set; }
     }
 
 }

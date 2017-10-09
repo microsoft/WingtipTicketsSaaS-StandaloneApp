@@ -74,7 +74,8 @@ namespace Events_Tenant.Common.Mapping
                 AdminPassword = venueModel.AdminPassword,
                 CountryCode = venueModel.CountryCode.Trim(),
                 PostalCode = venueModel.PostalCode,
-                VenueType = venueModel.VenueType.Trim()
+                VenueType = venueModel.VenueType.Trim(),
+                VenueId= venueModel.VenueId
             };
         }
 

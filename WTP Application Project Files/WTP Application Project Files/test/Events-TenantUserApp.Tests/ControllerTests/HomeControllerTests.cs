@@ -29,7 +29,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             mockTenantRepo.Setup(repo => repo.GetVenueById(1234646)).Returns(GetVenueDetails());
             mockTenantRepo.Setup(repo => repo.GetVenueByName("Venue Name")).Returns(GetVenueDetails());
 
-            _homeController = new HomeController(mockTenantRepo.Object, logger);
+            _homeController = new HomeController( logger);
         }
 
 

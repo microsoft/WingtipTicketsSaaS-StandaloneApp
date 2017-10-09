@@ -6,6 +6,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using Events_Tenant.Common.Interfaces;
+using Events_TenantUserApp.EF.TenantsDdEF6;
 
 namespace Events_Tenant.Common.Utilities
 {
@@ -19,75 +20,22 @@ namespace Events_Tenant.Common.Utilities
         #region Public methods
 
         /// <summary>
-        /// Converts the int key to bytes array.
+        /// This method will ensure that the stored proc Reset Event Dates is invoked which will reset
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        public byte[] ConvertIntKeyToBytesArray(int key)
+        /// <param name="connString">The connection string to be passed to EF6</param>
+        public void ResetEventDates(string connString)
         {
-            byte[] normalized = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(key));
-
-            // Maps Int32.Min - Int32.Max to UInt32.Min - UInt32.Max.
-            normalized[0] ^= 0x80;
-
-            return normalized;
-        }
-
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Gets all tenant names from tenant server
-        /// </summary>
-        /// <param name="tenantServerConfig">The tenant server configuration.</param>
-        /// <param name="databaseConfig">The database configuration.</param>
-        /// <returns></returns>
-        private List<string> GetAllTenantNames(TenantServerConfig tenantServerConfig, DatabaseConfig databaseConfig)
-        {
-            List<string> list = new List<string>();
-
-            string conString = $"Server={databaseConfig.SqlProtocol}:{tenantServerConfig.TenantServer},{databaseConfig.DatabaseServerPort};Database={""};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;Connection Timeout={databaseConfig.ConnectionTimeOut};";
-
-            using (SqlConnection con = new SqlConnection(conString))
+            #region EF6
+            //use EF6 since execution of Stored Procedure in EF Core for anonymous return type is not supported yet
+            using (var context = new TenantContext(connString))
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases WHERE name NOT IN ('master')", con))
-                {
-                    using (IDataReader dr = cmd.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            list.Add(dr[0].ToString());
-                        }
-                    }
-                }
+                context.Database.ExecuteSqlCommand("sp_ResetEventDates");
             }
-            return list;
+            #endregion
         }
 
-        /// <summary>
-        /// Generates the tenant Id using MD5 Hashing.
-        /// </summary>
-        /// <param name="tenantName">Name of the tenant.</param>
-        /// <returns></returns>
-        private int GetTenantKey(string tenantName)
-        {
-            var normalizedTenantName = tenantName.Replace(" ", string.Empty).ToLower();
 
-            //Produce utf8 encoding of tenant name 
-            var tenantNameBytes = Encoding.UTF8.GetBytes(normalizedTenantName);
-
-            //Produce the md5 hash which reduces the size
-            MD5 md5 = MD5.Create();
-            var tenantHashBytes = md5.ComputeHash(tenantNameBytes);
-
-            //Convert to integer for use as the key
-            int tenantKey = BitConverter.ToInt32(tenantHashBytes, 0);
-
-            return tenantKey;
-        }
         #endregion
+
     }
 }
