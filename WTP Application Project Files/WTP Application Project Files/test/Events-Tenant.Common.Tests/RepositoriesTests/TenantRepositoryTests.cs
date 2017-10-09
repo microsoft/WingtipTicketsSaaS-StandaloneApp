@@ -214,7 +214,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
             Assert.IsNotNull(result);
             Assert.AreEqual("USA", result.CountryCode);
             Assert.AreEqual("pop", result.VenueType);
-            Assert.AreEqual("Venue 1", result.VenueName);
+            Assert.AreEqual("Contoso Concert Hall", result.VenueName);
             Assert.AreEqual("123", result.PostalCode);
             Assert.AreEqual("admin@email.com", result.AdminEmail);
             Assert.AreEqual("password", result.AdminPassword);

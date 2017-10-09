@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Xunit;
 using Assert = Xunit.Assert;
+using Microsoft.Extensions.Configuration;
 
 namespace Events_TenantUserApp.Tests.ControllerTests
 {
@@ -22,14 +23,14 @@ namespace Events_TenantUserApp.Tests.ControllerTests
     {
         private readonly HomeController _homeController;
 
-        public HomeControllerTests(ILogger<HomeController> logger)
+        public HomeControllerTests(ILogger<HomeController> logger, IConfiguration configuration)
         {
             var mockTenantRepo = new Mock<ITenantRepository>();
 
             mockTenantRepo.Setup(repo => repo.GetVenueById(1234646)).Returns(GetVenueDetails());
             mockTenantRepo.Setup(repo => repo.GetVenueByName("Venue Name")).Returns(GetVenueDetails());
 
-            _homeController = new HomeController( logger);
+            _homeController = new HomeController(logger, configuration);
         }
 
 
