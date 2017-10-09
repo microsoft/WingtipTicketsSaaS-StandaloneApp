@@ -202,7 +202,6 @@ namespace Events_TenantUserApp
                 DatabasePassword = Configuration["DatabasePassword"],
                 DatabaseUser = Configuration["DatabaseUser"],
                 DatabaseServerPort = Convert.ToInt32(Configuration["DatabaseServerPort"]),
-                SqlProtocol = SqlProtocol.Tcp,
                 ConnectionTimeOut = Convert.ToInt32(Configuration["ConnectionTimeOut"]),
                 LearnHowFooterUrl = Configuration["LearnHowFooterUrl"]
             };

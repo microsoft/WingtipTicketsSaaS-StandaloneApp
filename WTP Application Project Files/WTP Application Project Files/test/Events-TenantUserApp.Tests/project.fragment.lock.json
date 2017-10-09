@@ -10,7 +10,6 @@
       "runtime": {
         "../../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.SqlServer.dll": {},
         "../../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.dll": {},
-        "../../packages/Microsoft.Azure.SqlDatabase.ElasticScale.Client.1.3.3/lib/net45/Microsoft.Azure.SqlDatabase.ElasticScale.Client.dll": {},
         "../../packages/Microsoft.EntityFrameworkCore.1.1.1/lib/net451/Microsoft.EntityFrameworkCore.dll": {},
         "../../packages/Microsoft.Extensions.Caching.Abstractions.1.1.1/lib/netstandard1.0/Microsoft.Extensions.Caching.Abstractions.dll": {},
         "../../packages/Microsoft.Extensions.Caching.Memory.1.1.1/lib/net451/Microsoft.Extensions.Caching.Memory.dll": {},
@@ -48,7 +47,6 @@
         "../../packages/Microsoft.AspNetCore.Hosting.Server.Abstractions.1.1.1/lib/net451/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll": {},
         "../../packages/Microsoft.AspNetCore.Http.Abstractions.1.1.1/lib/net451/Microsoft.AspNetCore.Http.Abstractions.dll": {},
         "../../packages/Microsoft.AspNetCore.Http.Features.1.1.1/lib/net451/Microsoft.AspNetCore.Http.Features.dll": {},
-        "../../packages/Microsoft.Azure.SqlDatabase.ElasticScale.Client.1.3.3/lib/net45/Microsoft.Azure.SqlDatabase.ElasticScale.Client.dll": {},
         "../../packages/Microsoft.EntityFrameworkCore.1.1.1/lib/net451/Microsoft.EntityFrameworkCore.dll": {},
         "../../packages/Microsoft.EntityFrameworkCore.Design.1.1.1/lib/net451/Microsoft.EntityFrameworkCore.Design.dll": {},
         "../../packages/Microsoft.EntityFrameworkCore.Relational.1.1.1/lib/net451/Microsoft.EntityFrameworkCore.Relational.dll": {},

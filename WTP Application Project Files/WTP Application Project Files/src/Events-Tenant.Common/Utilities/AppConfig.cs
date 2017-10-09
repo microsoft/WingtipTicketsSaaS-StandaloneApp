@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Events_Tenant.Common.Models;
-using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
 
 namespace Events_Tenant.Common.Utilities
 {
@@ -14,7 +13,6 @@ namespace Events_Tenant.Common.Utilities
         public int DatabaseServerPort { get; set; }
         public int ConnectionTimeOut { get; set; }
         public string LearnHowFooterUrl { get; set; }
-        public SqlProtocol SqlProtocol { get; set; }
     }
 
     /// <summary>
