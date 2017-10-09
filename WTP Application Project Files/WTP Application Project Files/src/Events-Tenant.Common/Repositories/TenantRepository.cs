@@ -17,7 +17,6 @@ namespace Events_Tenant.Common.Repositories
         #region Private variables
 
         private readonly string _connectionString;
-        private readonly TenantDbContext _tenantDbContext;
 
         #endregion
 
@@ -34,7 +33,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<List<CountryModel>> GetAllCountries(int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var allCountries = await context.Countries.ToListAsync();
 
@@ -44,7 +43,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<CountryModel> GetCountry(string countryCode, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var country = await context.Countries.Where(x => x.CountryCode == countryCode).FirstOrDefaultAsync();
                 return country?.ToCountryModel();
@@ -57,7 +56,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<int> AddCustomer(CustomerModel customeModel, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var customer = customeModel.ToCustomersEntity();
 
@@ -70,7 +69,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<CustomerModel> GetCustomer(string email, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var customer = await context.Customers.Where(i => i.Email == email).FirstOrDefaultAsync();
 
@@ -84,7 +83,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<List<EventSectionModel>> GetEventSections(int eventId, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var eventsections = await context.EventSections.Where(i => i.EventId == eventId).ToListAsync();
 
@@ -98,7 +97,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<List<EventModel>> GetEventsForTenant(int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 //Past events (yesterday and earlier) are not shown 
                 var events = await context.Events.Where(i => i.Date >= DateTime.Now).OrderBy(x => x.Date).ToListAsync();
@@ -109,7 +108,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<EventModel> GetEvent(int eventId, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var eventModel = await context.Events.Where(i => i.EventId == eventId).FirstOrDefaultAsync();
 
@@ -123,7 +122,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<List<SectionModel>> GetSections(List<int> sectionIds, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var sections = await context.Sections.Where(i => sectionIds.Contains(i.SectionId)).ToListAsync();
 
@@ -133,7 +132,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<SectionModel> GetSection(int sectionId, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var section = await context.Sections.Where(i => i.SectionId == sectionId).FirstOrDefaultAsync();
 
@@ -147,7 +146,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<int> AddTicketPurchase(TicketPurchaseModel ticketPurchaseModel, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var ticketPurchase = ticketPurchaseModel.ToTicketPurchasesEntity();
 
@@ -160,7 +159,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<int> GetNumberOfTicketPurchases(int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var ticketPurchases = await context.TicketPurchases.ToListAsync();
                 if (ticketPurchases.Any())
@@ -177,7 +176,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<bool> AddTicket(List<TicketModel> ticketModels, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 foreach (TicketModel ticketModel in ticketModels)
                 {
@@ -190,7 +189,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<int> GetTicketsSold(int sectionId, int eventId, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var tickets = await context.Tickets.Where(i => i.SectionId == sectionId && i.EventId == eventId).ToListAsync();
                 if (tickets.Any())
@@ -207,7 +206,7 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<VenueModel> GetVenueDetails(int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 //get database name
                 string databaseName, databaseServerName;
@@ -232,24 +231,28 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<VenueModel> GetVenueByName(string tenantName)
         {
-            var tenants = await _tenantDbContext.Venue.Where(i => Regex.Replace(i.VenueName.ToLower(), @"\s+", "") == tenantName).ToListAsync();
-
-            if (tenants.Any())
+            using (var context = CreateContext())
             {
-                var tenant = tenants.FirstOrDefault();
-                return tenant?.ToVenueModel();
+                var tenants = await context.Venue.Where(i => Regex.Replace(i.VenueName.ToLower(), @"\s+", "") == tenantName).ToListAsync();
+                if (tenants.Any())
+                {
+                    var tenant = tenants.FirstOrDefault();
+                    return tenant?.ToVenueModel();
+                }
             }
-
             return null;
         }
 
         public async Task<VenueModel> GetVenueById(int tenantId)
         {
-            var venue = await _tenantDbContext.Venue.Where(x => x.VenueId == tenantId).FirstOrDefaultAsync();
-            if (venue != null)
+            using (var context = CreateContext())
             {
-                var venueModel = venue.ToVenueModel();
-                return venueModel;
+                var tenants = await context.Venue.Where(i => i.VenueId == tenantId).ToListAsync();
+                if (tenants.Any())
+                {
+                    var tenant = tenants.FirstOrDefault();
+                    return tenant?.ToVenueModel();
+                }
             }
             return null;
         }
@@ -260,10 +263,9 @@ namespace Events_Tenant.Common.Repositories
 
         public async Task<VenueTypeModel> GetVenueType(string venueType, int tenantId)
         {
-            using (var context = CreateContext(tenantId))
+            using (var context = CreateContext())
             {
                 var venueTypeDetails = await context.VenueTypes.Where(i => i.VenueType == venueType).FirstOrDefaultAsync();
-
                 return venueTypeDetails?.ToVenueTypeModel();
             }
         }
@@ -271,7 +273,7 @@ namespace Events_Tenant.Common.Repositories
         #endregion
 
         #region Private methods
-        private TenantDbContext CreateContext(int tenantId)
+        private TenantDbContext CreateContext()
         {
             return new TenantDbContext(_connectionString);
         }

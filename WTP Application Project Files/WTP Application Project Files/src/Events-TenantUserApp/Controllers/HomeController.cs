@@ -19,11 +19,9 @@ namespace Events_TenantUserApp.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController" /> class.
         /// </summary>
-        /// <param name="tenantRepository">The venues repository.</param>
         /// <param name="logger">The logger.</param>
-        public HomeController(ITenantRepository tenantRepository, ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
-            _tenantRepository = tenantRepository;
             _logger = logger;
         }
 

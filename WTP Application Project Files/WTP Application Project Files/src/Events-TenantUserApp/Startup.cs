@@ -76,11 +76,9 @@ namespace Events_TenantUserApp
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            //register tenant DB
-            services.AddDbContext<TenantDbContext>(options => options.UseSqlServer(GetTenantConnectionString(TenantServerConfig, DatabaseConfig)));
-
             //Add Application services
             services.AddTransient<ITenantRepository, TenantRepository>();
+            services.AddSingleton<ITenantRepository>(p => new TenantRepository(GetTenantConnectionString()));
             services.AddSingleton<IConfiguration>(Configuration);
 
             //create instance of utilities class
@@ -183,9 +181,9 @@ namespace Events_TenantUserApp
         /// <param name="tenantConfig">The tenant server configuration.</param>
         /// <param name="databaseConfig">The database configuration.</param>
         /// <returns></returns>
-        private string GetTenantConnectionString(TenantServerConfig tenantConfig, DatabaseConfig databaseConfig)
+        private string GetTenantConnectionString()
         {
-            return $"Server=tcp:{tenantConfig.TenantServer},1433;Database={tenantConfig.TenantDatabase};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;";
+            return $"Server=tcp:{TenantServerConfig.TenantServer},1433;Database={TenantServerConfig.TenantDatabase};User ID={DatabaseConfig.DatabaseUser};Password={DatabaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;";
 
         }
 
