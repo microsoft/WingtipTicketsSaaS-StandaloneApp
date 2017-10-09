@@ -18,18 +18,20 @@ namespace Events_TenantUserApp.Controllers
 
         private readonly ITenantRepository _tenantRepository;
         private readonly IStringLocalizer<AccountController> _localizer;
+        private readonly ICatalogRepository _catalogRepository;
         private readonly ILogger _logger;
 
         #endregion
 
         #region Constructors
 
-        public AccountController(IStringLocalizer<AccountController> localizer, IStringLocalizer<BaseController> baseLocalizer, ITenantRepository tenantRepository, ILogger<AccountController> logger, IConfiguration configuration)
+        public AccountController(IStringLocalizer<AccountController> localizer, IStringLocalizer<BaseController> baseLocalizer, ITenantRepository tenantRepository, ICatalogRepository catalogRepository, ILogger<AccountController> logger, IConfiguration configuration)
             : base(baseLocalizer, tenantRepository, configuration)
         {
             _localizer = localizer;
             _tenantRepository = tenantRepository;
-            _logger = logger;
+            _catalogRepository = catalogRepository;
+             _logger = logger;
         }
 
         #endregion
@@ -47,13 +49,13 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = (_catalogRepository.GetTenant(tenant)).Result;
 
                     if (tenantDetails != null)
                     {
-                        SetTenantConfig(tenantDetails.VenueId);
+                        SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
-                        var customer = await _tenantRepository.GetCustomer(regEmail, tenantDetails.VenueId);
+                        var customer = await _tenantRepository.GetCustomer(regEmail, tenantDetails.TenantId);
 
                         if (customer != null)
                         {
@@ -109,7 +111,7 @@ namespace Events_TenantUserApp.Controllers
             {
                 _logger.LogError(0, ex, "Log out failed for tenant {tenant}", tenant);
             }
-            return RedirectToAction("Index", "Events", new { tenant });
+            return RedirectToAction("Index", "Events", new {tenant});
         }
 
         [HttpPost]
@@ -123,17 +125,17 @@ namespace Events_TenantUserApp.Controllers
                     return RedirectToAction("Index", "Events", new { tenant });
                 }
 
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = (_catalogRepository.GetTenant(tenant)).Result;
                 if (tenantDetails != null)
                 {
-                    SetTenantConfig(tenantDetails.VenueId);
+                    SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
                     //check if customer already exists
-                    var customer = (_tenantRepository.GetCustomer(customerModel.Email, tenantDetails.VenueId)).Result;
+                    var customer = (_tenantRepository.GetCustomer(customerModel.Email, tenantDetails.TenantId)).Result;
 
                     if (customer == null)
                     {
-                        var customerId = await _tenantRepository.AddCustomer(customerModel, tenantDetails.VenueId);
+                        var customerId = await _tenantRepository.AddCustomer(customerModel, tenantDetails.TenantId);
                         customerModel.CustomerId = customerId;
                         customerModel.TenantName = tenant;
 
@@ -163,7 +165,7 @@ namespace Events_TenantUserApp.Controllers
                     return View("TenantError", tenant);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 _logger.LogError(0, ex, "Registration failed for tenant {tenant}", tenant);
             }

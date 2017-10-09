@@ -10,14 +10,11 @@ namespace Events_TenantUserApp.EF.TenantsDB
             EventSections = new HashSet<EventSections>();
         }
 
-        public int VenueId { get; set; }
         public int EventId { get; set; }
         public string EventName { get; set; }
         public string Subtitle { get; set; }
         public DateTime Date { get; set; }
-        public byte[] RowVersion { get; set; }
 
         public virtual ICollection<EventSections> EventSections { get; set; }
-        public virtual Venues Venue { get; set; }
     }
 }

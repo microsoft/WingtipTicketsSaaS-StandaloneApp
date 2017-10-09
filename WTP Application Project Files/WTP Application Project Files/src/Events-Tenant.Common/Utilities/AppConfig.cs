@@ -33,7 +33,7 @@ namespace Events_Tenant.Common.Utilities
     public class TenantServerConfig
     {
         public string TenantServer { get; set; }
-        public string TenantDatabase { get; set; }
+
         /// <summary>
         /// Boolean value to specify if the events dates need to be reset
         /// This can be set to false when in Development mode
@@ -57,9 +57,8 @@ namespace Events_Tenant.Common.Utilities
         public string Currency { get; set; }
         public string TenantCulture { get; set; }
         public List<CountryModel> TenantCountries { get; set; }
+        public string TenantIdInString { get; set; }
         public string User { get; set; }
-        public string DatabaseName { get; set; }
-        public string DatabaseServerName { get; set; }
     }
 
 }

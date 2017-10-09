@@ -13,14 +13,10 @@ namespace Events_Tenant.Common.Tests.ShardingTests
     {
         #region Private fields
 
-        //Use your local SQL Server instance name
-        internal const string TestServer = @"localhost";
-        
-        //If your local instance does not support Windows Authentication change here for SQL Authentication
-        internal const string ShardMapManagerTestConnectionString = "Data Source=" + TestServer + ";Integrated Security=True;";
+        internal const string ShardMapManagerTestConnectionString = "Data Source=localhost;Integrated Security=True;";
 
-        private const string CreateDatabaseQueryFormat =
-            "IF EXISTS (SELECT name FROM sys.databases WHERE name = N'{0}') BEGIN DROP DATABASE [{0}] END CREATE DATABASE [{0}]";
+        private const string CreateDatabaseQuery =
+            "IF EXISTS (SELECT name FROM sys.databases WHERE name = N'TestTenant') BEGIN DROP DATABASE [TestTenant] END CREATE DATABASE [TestTenant]";
 
         private CatalogConfig _catalogConfig;
         private DatabaseConfig _databaseConfig;
@@ -32,6 +28,7 @@ namespace Events_Tenant.Common.Tests.ShardingTests
 
         #endregion
 
+
         [TestInitialize]
         public void Setup()
         {
@@ -39,7 +36,7 @@ namespace Events_Tenant.Common.Tests.ShardingTests
             {
                 ServicePlan = "Standard",
                 CatalogDatabase = "ShardMapManager",
-                CatalogServer = TestServer
+                CatalogServer = "localhost"
             };
 
             _databaseConfig = new DatabaseConfig
@@ -55,11 +52,11 @@ namespace Events_Tenant.Common.Tests.ShardingTests
             var tenant = new Tenants
             {
                 ServicePlan = "Standard",
-                TenantName = "Test Tenant 1",
+                TenantName = "TestTenant",
                 TenantId = new byte[0]
             };
 
-            _connectionString = string.Format("{0}Initial Catalog={1};", ShardMapManagerTestConnectionString, _catalogConfig.CatalogDatabase);
+            _connectionString = "Data Source=localhost;Initial Catalog=ShardMapManager;Integrated Security=SSPI;";
 
             _mockCatalogRepo = new Mock<ICatalogRepository>();
             _mockCatalogRepo.Setup(repo => repo.Add(tenant));
@@ -68,7 +65,7 @@ namespace Events_Tenant.Common.Tests.ShardingTests
 
             _mockUtilities = new Mock<IUtilities>();
 
-            #region Create databases on localhost
+            #region Create tenant database on localhost
 
             // Clear all connection pools.
             SqlConnection.ClearAllPools();
@@ -78,21 +75,15 @@ namespace Events_Tenant.Common.Tests.ShardingTests
                 conn.Open();
 
                 // Create ShardMapManager database
-                using (SqlCommand cmd = new SqlCommand(string.Format(CreateDatabaseQueryFormat, _catalogConfig.CatalogDatabase), conn))
+                using (SqlCommand cmd = new SqlCommand(CreateDatabaseQuery, conn))
                 {
                     cmd.ExecuteNonQuery();
                 }
-
-                // Create Tenant database
-                using (SqlCommand cmd = new SqlCommand(string.Format(CreateDatabaseQueryFormat, tenant.TenantName), conn))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-
             }
             #endregion
 
         }
+
 
         [TestMethod]
         public void ShardingTest()
@@ -112,13 +103,10 @@ namespace Events_Tenant.Common.Tests.ShardingTests
             };
 
             var sharding = new Sharding(_catalogConfig.CatalogDatabase, _connectionString, _mockCatalogRepo.Object, _mockTenantRepo.Object, _mockUtilities.Object);
-            Assert.IsNotNull(sharding);
+            var result = await Sharding.RegisterNewShard("TestTenant", 397858529, "localhost", _databaseConfig.DatabaseServerPort, _catalogConfig.ServicePlan);
 
-            var shard = Sharding.CreateNewShard("Test Tenant 1", TestServer, _databaseConfig.DatabaseServerPort, _catalogConfig.ServicePlan);
-            Assert.IsNotNull(shard);
-
-            var result = await Sharding.RegisterNewShard(397858529, _catalogConfig.ServicePlan, shard);
             Assert.IsTrue(result);
         }
+       
     }
 }

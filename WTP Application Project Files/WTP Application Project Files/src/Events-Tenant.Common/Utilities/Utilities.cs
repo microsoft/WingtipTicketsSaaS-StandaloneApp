@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using Events_Tenant.Common.Interfaces;
 using Events_TenantUserApp.EF.TenantsDdEF6;
-using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
 
 namespace Events_Tenant.Common.Utilities
 {
@@ -16,23 +17,57 @@ namespace Events_Tenant.Common.Utilities
     /// The Utilities class for doing common methods
     /// </summary>
     /// <seealso cref="Events_Tenant.Common.Interfaces.IUtilities" />
-    public class Utilities : IUtilities
+    public class Utilities: IUtilities
     {
         #region Public methods
 
         /// <summary>
-        /// This method will ensure that the stored proc Reset Event Dates is invoked which will reset
+        /// Register tenant shard
         /// </summary>
-        /// <param name="connString">The connection string to be passed to EF6</param>
-        public void ResetEventDates(string connString)
+        /// <param name="tenantServerConfig">The tenant server configuration.</param>
+        /// <param name="databaseConfig">The database configuration.</param>
+        /// <param name="catalogConfig">The catalog configuration.</param>
+        /// <param name="resetEventDate">If set to true, the events dates for all tenants will be reset </param>
+        public async void RegisterTenantShard(TenantServerConfig tenantServerConfig, DatabaseConfig databaseConfig, CatalogConfig catalogConfig, bool resetEventDate)
         {
-            #region EF6
-            //use EF6 since execution of Stored Procedure in EF Core for anonymous return type is not supported yet
-            using (var context = new TenantContext(connString))
+            //get all database in devtenantserver
+            var tenants = GetAllTenantNames(tenantServerConfig, databaseConfig);
+
+            var connectionString = new SqlConnectionStringBuilder
             {
-                context.Database.ExecuteSqlCommand("sp_ResetEventDates");
+                UserID = databaseConfig.DatabaseUser,
+                Password = databaseConfig.DatabasePassword,
+                ApplicationName = "EntityFramework",
+                ConnectTimeout = databaseConfig.ConnectionTimeOut
+            };
+
+            foreach (var tenant in tenants)
+            {
+                var tenantId = GetTenantKey(tenant);
+                var result = await Sharding.RegisterNewShard(tenant, tenantId, tenantServerConfig.TenantServer, databaseConfig.DatabaseServerPort, catalogConfig.ServicePlan);
+                if (result)
+                {
+                    // resets all tenants' event dates
+                    if (resetEventDate)
+                    {
+                        #region EF6
+                        //use EF6 since execution of Stored Procedure in EF Core for anonymous return type is not supported yet
+                        using (var context = new TenantContext(Sharding.ShardMap, tenantId, connectionString.ConnectionString))
+                        {
+                            context.Database.ExecuteSqlCommand("sp_ResetEventDates");
+                        }
+                        #endregion
+
+                        #region EF core
+                        //https://github.com/aspnet/EntityFramework/issues/7032
+                        //using (var context = new TenantDbContext(Sharding.ShardMap, tenantId, connectionString))
+                        //{
+                        //     context.Database.ExecuteSqlCommand("sp_ResetEventDates");
+                        //}
+                        #endregion
+                    }
+                }
             }
-            #endregion
         }
 
         /// <summary>
@@ -53,6 +88,37 @@ namespace Events_Tenant.Common.Utilities
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Gets all tenant names from tenant server
+        /// </summary>
+        /// <param name="tenantServerConfig">The tenant server configuration.</param>
+        /// <param name="databaseConfig">The database configuration.</param>
+        /// <returns></returns>
+        private List<string> GetAllTenantNames(TenantServerConfig tenantServerConfig, DatabaseConfig databaseConfig)
+        {
+            List<string> list = new List<string>();
+
+            string conString = $"Server={databaseConfig.SqlProtocol}:{tenantServerConfig.TenantServer},{databaseConfig.DatabaseServerPort};Database={""};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;Connection Timeout={databaseConfig.ConnectionTimeOut};";
+
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases WHERE name NOT IN ('master')", con))
+                {
+                    using (IDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            list.Add(dr[0].ToString());
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
         /// <summary>
         /// Generates the tenant Id using MD5 Hashing.
         /// </summary>

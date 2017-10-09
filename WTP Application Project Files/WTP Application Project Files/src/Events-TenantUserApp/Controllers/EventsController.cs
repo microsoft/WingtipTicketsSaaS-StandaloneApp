@@ -12,16 +12,18 @@ namespace Events_TenantUserApp.Controllers
     {
         #region Fields
         private readonly ITenantRepository _tenantRepository;
+        private readonly ICatalogRepository _catalogRepository;
         private readonly ILogger _logger;
 
         #endregion
 
         #region Constructors
 
-        public EventsController(ITenantRepository tenantRepository, IStringLocalizer<BaseController> baseLocalizer, ILogger<EventsController> logger, IConfiguration configuration) : base(baseLocalizer, tenantRepository, configuration)
+        public EventsController(ITenantRepository tenantRepository, ICatalogRepository catalogRepository, IStringLocalizer<BaseController> baseLocalizer, ILogger<EventsController> logger, IConfiguration configuration) : base(baseLocalizer, tenantRepository, configuration)
         {
             _logger = logger;
             _tenantRepository = tenantRepository;
+            _catalogRepository = catalogRepository;
         }
 
         #endregion
@@ -34,12 +36,12 @@ namespace Events_TenantUserApp.Controllers
             {
                 if (!string.IsNullOrEmpty(tenant))
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = await _catalogRepository.GetTenant(tenant);
                     if (tenantDetails != null)
                     {
-                        SetTenantConfig(tenantDetails.VenueId);
+                        SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
-                        var events = await _tenantRepository.GetEventsForTenant(tenantDetails.VenueId);
+                        var events = await _tenantRepository.GetEventsForTenant(tenantDetails.TenantId);
                         return View(events);
                     }
                     else

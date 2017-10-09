@@ -6,6 +6,7 @@ using System.Linq;
 using Events_Tenant.Common.Interfaces;
 using Events_Tenant.Common.Repositories;
 using Events_Tenant.Common.Utilities;
+using Events_TenantUserApp.EF.CatalogDB;
 using Events_TenantUserApp.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Events_TenantUserApp.EF.TenantsDB;
 
 namespace Events_TenantUserApp
 {
@@ -27,16 +27,20 @@ namespace Events_TenantUserApp
     {
         #region Private fields
         private IUtilities _utilities;
+        private ICatalogRepository _catalogRepository;
         private ITenantRepository _tenantRepository;
         #endregion
 
         #region Public Properties
         public static DatabaseConfig DatabaseConfig { get; set; }
+        public static CatalogConfig CatalogConfig { get; set; }
         public static TenantServerConfig TenantServerConfig { get; set; }
         public IConfigurationRoot Configuration { get; }
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -52,6 +56,7 @@ namespace Events_TenantUserApp
 
             //read config settigs from appsettings.json
             ReadAppConfig();
+
         }
 
         #endregion
@@ -77,19 +82,20 @@ namespace Events_TenantUserApp
             services.AddSession();
 
             //register catalog DB
-            services.AddDbContext<TenantDbContext>(options => options.UseSqlServer(GetTenantConnectionString(TenantServerConfig, DatabaseConfig)));
+            services.AddDbContext<CatalogDbContext>(options => options.UseSqlServer(GetCatalogConnectionString(CatalogConfig, DatabaseConfig)));
 
             //Add Application services
+            services.AddTransient<ICatalogRepository, CatalogRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
+            services.AddSingleton<ITenantRepository>(p => new TenantRepository(GetBasicSqlConnectionString()));
             services.AddSingleton<IConfiguration>(Configuration);
 
             //create instance of utilities class
             services.AddTransient<IUtilities, Utilities>();
             var provider = services.BuildServiceProvider();
             _utilities = provider.GetService<IUtilities>();
+            _catalogRepository = provider.GetService<ICatalogRepository>();
             _tenantRepository = provider.GetService<ITenantRepository>();
-            if(TenantServerConfig.ResetEventDates)
-                _utilities.ResetEventDates(GetTenantConnectionString(TenantServerConfig, DatabaseConfig));
         }
 
         /// <summary>
@@ -174,21 +180,26 @@ namespace Events_TenantUserApp
                     template: "{tenant}/{controller=FindSeats}/{action=Index}/{id?}");
 
             });
+
+            //shard management
+            InitialiseShardMapManager();
+            _utilities.RegisterTenantShard(TenantServerConfig, DatabaseConfig, CatalogConfig, TenantServerConfig.ResetEventDates);
         }
 
         #endregion
 
         #region Private methods
+
         /// <summary>
         ///  Gets the catalog connection string using the app settings
         /// </summary>
         /// <param name="catalogConfig">The catalog configuration.</param>
         /// <param name="databaseConfig">The database configuration.</param>
         /// <returns></returns>
-        private string GetTenantConnectionString(TenantServerConfig tenantConfig, DatabaseConfig databaseConfig)
+        private string GetCatalogConnectionString(CatalogConfig catalogConfig, DatabaseConfig databaseConfig)
         {
-            return $"Server=tcp:{tenantConfig.TenantServer},1433;Database={tenantConfig.TenantDatabase};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;";
-            
+            return
+                $"Server=tcp:{catalogConfig.CatalogServer},1433;Database={catalogConfig.CatalogDatabase};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;";
         }
 
         /// <summary>
@@ -206,12 +217,52 @@ namespace Events_TenantUserApp
                 LearnHowFooterUrl = Configuration["LearnHowFooterUrl"]
             };
 
+            CatalogConfig = new CatalogConfig
+            {
+                ServicePlan = Configuration["ServicePlan"],
+                CatalogDatabase = Configuration["CatalogDatabase"],
+                CatalogServer = Configuration["CatalogServer"] + ".database.windows.net"
+            };
+
             TenantServerConfig = new TenantServerConfig
             {
                 TenantServer = Configuration["TenantServer"] + ".database.windows.net",
-                TenantDatabase = Configuration["TenantDatabase"],
                 ResetEventDates = Convert.ToBoolean(Configuration["ResetEventDates"])
             };
+        }
+
+
+        /// <summary>
+        /// Initialises the shard map manager and shard map 
+        /// <para>Also does all tasks related to sharding</para>
+        /// </summary>
+        private void InitialiseShardMapManager()
+        {
+            var basicConnectionString = GetBasicSqlConnectionString();
+            SqlConnectionStringBuilder connectionString = new SqlConnectionStringBuilder(basicConnectionString)
+            {
+                DataSource = DatabaseConfig.SqlProtocol + ":" + CatalogConfig.CatalogServer + "," + DatabaseConfig.DatabaseServerPort,
+                InitialCatalog = CatalogConfig.CatalogDatabase
+            };
+
+            var sharding = new Sharding(CatalogConfig.CatalogDatabase, connectionString.ConnectionString, _catalogRepository, _tenantRepository, _utilities);
+        }
+
+        /// <summary>
+        /// Gets the basic SQL connection string.
+        /// </summary>
+        /// <returns></returns>
+        private string GetBasicSqlConnectionString()
+        {
+            var connStrBldr = new SqlConnectionStringBuilder
+            {
+                UserID = DatabaseConfig.DatabaseUser,
+                Password = DatabaseConfig.DatabasePassword,
+                ApplicationName = "EntityFramework",
+                ConnectTimeout = DatabaseConfig.ConnectionTimeOut
+            };
+
+            return connStrBldr.ConnectionString;
         }
         #endregion
 

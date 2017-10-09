@@ -9,7 +9,6 @@ namespace Events_TenantUserApp.EF.TenantsDB
             TicketPurchases = new HashSet<TicketPurchases>();
         }
 
-        public int VenueId { get; set; }
         public int CustomerId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -17,10 +16,8 @@ namespace Events_TenantUserApp.EF.TenantsDB
         public string Password { get; set; }
         public string PostalCode { get; set; }
         public string CountryCode { get; set; }
-        public byte[] RowVersion { get; set; }
 
         public virtual ICollection<TicketPurchases> TicketPurchases { get; set; }
         public virtual Countries CountryCodeNavigation { get; set; }
-        public virtual Venues Venue { get; set; }
     }
 }

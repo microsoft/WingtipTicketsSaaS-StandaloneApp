@@ -5,19 +5,20 @@ using Events_Tenant.Common.Interfaces;
 using Events_Tenant.Common.Models;
 using Events_TenantUserApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Events_TenantUserApp.Controllers
 {
     [Route("{tenant}/FindSeats")]
-    public class FindSeatsController : BaseController
+    public class FindSeatsController: BaseController
     {
         #region Private varibles
 
         private readonly ITenantRepository _tenantRepository;
+        private readonly ICatalogRepository _catalogRepository;
         private readonly IStringLocalizer<FindSeatsController> _localizer;
         private readonly ILogger _logger;
 
@@ -25,9 +26,10 @@ namespace Events_TenantUserApp.Controllers
 
         #region Constructor
 
-        public FindSeatsController(ITenantRepository tenantRepository, IStringLocalizer<FindSeatsController> localizer, IStringLocalizer<BaseController> baseLocalizer, ILogger<FindSeatsController> logger, IConfiguration configuration) : base(baseLocalizer, tenantRepository, configuration)
+        public FindSeatsController(ITenantRepository tenantRepository, ICatalogRepository catalogRepository, IStringLocalizer<FindSeatsController> localizer, IStringLocalizer<BaseController> baseLocalizer, ILogger<FindSeatsController> logger, IConfiguration configuration) : base(baseLocalizer, tenantRepository, configuration)
         {
             _tenantRepository = tenantRepository;
+            _catalogRepository = catalogRepository;
             _localizer = localizer;
             _logger = logger;
         }
@@ -42,22 +44,22 @@ namespace Events_TenantUserApp.Controllers
             {
                 if (eventId != 0)
                 {
-                    var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                    var tenantDetails = (_catalogRepository.GetTenant(tenant)).Result;
                     if (tenantDetails != null)
                     {
-                        SetTenantConfig(tenantDetails.VenueId);
+                        SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
-                        var eventDetails = await _tenantRepository.GetEvent(eventId, tenantDetails.VenueId);
+                        var eventDetails = await _tenantRepository.GetEvent(eventId, tenantDetails.TenantId);
 
                         if (eventDetails != null)
                         {
-                            var eventSections = await _tenantRepository.GetEventSections(eventId, tenantDetails.VenueId);
+                            var eventSections = await _tenantRepository.GetEventSections(eventId, tenantDetails.TenantId);
                             var seatSectionIds = eventSections.Select(i => i.SectionId).ToList();
 
-                            var seatSections = await _tenantRepository.GetSections(seatSectionIds, tenantDetails.VenueId);
+                            var seatSections = await _tenantRepository.GetSections(seatSectionIds, tenantDetails.TenantId);
                             if (seatSections != null)
                             {
-                                var ticketsSold = await _tenantRepository.GetTicketsSold(seatSections[0].SectionId, eventId, tenantDetails.VenueId);
+                                var ticketsSold = await _tenantRepository.GetTicketsSold(seatSections[0].SectionId, eventId, tenantDetails.TenantId);
 
                                 FindSeatViewModel viewModel = new FindSeatViewModel
                                 {
@@ -88,14 +90,14 @@ namespace Events_TenantUserApp.Controllers
         {
             try
             {
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = (_catalogRepository.GetTenant(tenant)).Result;
                 if (tenantDetails != null)
                 {
-                    SetTenantConfig(tenantDetails.VenueId);
+                    SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
-                    var sectionDetails = await _tenantRepository.GetSection(sectionId, tenantDetails.VenueId);
+                    var sectionDetails = await _tenantRepository.GetSection(sectionId, tenantDetails.TenantId);
                     var totalNumberOfSeats = sectionDetails.SeatRows * sectionDetails.SeatsPerRow;
-                    var ticketsSold = await _tenantRepository.GetTicketsSold(sectionId, eventId, tenantDetails.VenueId);
+                    var ticketsSold = await _tenantRepository.GetTicketsSold(sectionId, eventId, tenantDetails.TenantId);
 
                     var availableSeats = totalNumberOfSeats - ticketsSold;
                     return Content(availableSeats.ToString());
@@ -135,29 +137,31 @@ namespace Events_TenantUserApp.Controllers
                     PurchaseTotal = Convert.ToDecimal(ticketPrice)
                 };
 
-                var tenantDetails = _tenantRepository.GetVenue(tenant).Result;
+                var tenantDetails = (_catalogRepository.GetTenant(tenant)).Result;
                 if (tenantDetails != null)
                 {
-                    SetTenantConfig(tenantDetails.VenueId);
+                    SetTenantConfig(tenantDetails.TenantId, tenantDetails.TenantIdInString);
 
-                    var latestPurchaseTicketId = await _tenantRepository.GetNumberOfTicketPurchases(tenantDetails.VenueId);
+                    var latestPurchaseTicketId = await _tenantRepository.GetNumberOfTicketPurchases(tenantDetails.TenantId);
                     ticketPurchaseModel.TicketPurchaseId = latestPurchaseTicketId + 1;
 
-                    var purchaseTicketId = await _tenantRepository.AddTicketPurchase(ticketPurchaseModel, tenantDetails.VenueId);
+                    var purchaseTicketId = await _tenantRepository.AddTicketPurchase(ticketPurchaseModel, tenantDetails.TenantId);
 
-                    var ticketModel = new List<TicketModel>();
+                    var ticketModel = new TicketModel
+                    {
+                        SectionId = Convert.ToInt32(sectionId),
+                        EventId = Convert.ToInt32(eventId),
+                        TicketPurchaseId = purchaseTicketId
+                    };
+
+                    Random rnd = new Random();
                     for (var i = 0; i < numberOfTickets; i++)
                     {
-                        ticketModel.Add(new TicketModel
-                        {
-                            SectionId = Convert.ToInt32(sectionId),
-                            EventId = Convert.ToInt32(eventId),
-                            TicketPurchaseId = purchaseTicketId,
-                            RowNumber = Convert.ToInt32(sectionId) + Convert.ToInt32(eventId) + purchaseTicketId, // ensures that the ticket purchased  row number is always unique
-                            SeatNumber = i + 1
-                        });
+                        Random rnd2 = new Random(5000);
+                        ticketModel.RowNumber = rnd.Next(0, 100000);
+                        ticketModel.SeatNumber = rnd2.Next(0, 100000);
+                        purchaseResult = await _tenantRepository.AddTicket(ticketModel, tenantDetails.TenantId);
                     }
-                    purchaseResult = await _tenantRepository.AddTicket(ticketModel, tenantDetails.VenueId);
 
                     if (purchaseResult)
                     {

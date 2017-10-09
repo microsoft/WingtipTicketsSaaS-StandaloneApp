@@ -47,6 +47,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
                 TenantName = "test tenant",
                 ServicePlan = "Standard"
             };
+
         }
     }
 }

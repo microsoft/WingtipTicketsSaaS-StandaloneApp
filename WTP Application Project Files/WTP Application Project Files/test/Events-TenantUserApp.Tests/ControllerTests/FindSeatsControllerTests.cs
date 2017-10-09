@@ -98,7 +98,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 SubTitle = "Contoso Chamber Orchestra"
             };
         }
-
+        
         private async Task<int> GetTicketId()
         {
             return 11;
@@ -177,17 +177,15 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             };
         }
 
-        private List<TicketModel> GetTicketModel()
+        private TicketModel GetTicketModel()
         {
-            var t = new List<TicketModel>();
-            t.Add(new TicketModel
+            return new TicketModel
             {
                 SectionId = 1,
                 EventId = 1,
                 RowNumber = 1000,
                 SeatNumber = 1001
-            });
-            return t;
+            };
         }
     }
 }

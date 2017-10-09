@@ -16,9 +16,21 @@ namespace Events_TenantUserApp.EF.TenantsDdEF6
         {
         }
 
-        public TenantContext(string connString)
-          : base(connString)
+        public TenantContext(ShardMap shardMap,int shardingKey, string connectionStr)
+            : base(CreateDdrConnection(shardMap, shardingKey, connectionStr) , true)
         {
+
+        }
+
+        private static DbConnection CreateDdrConnection(ShardMap shardMap, int shardingKey, string connectionStr)
+        {
+            // No initialization
+            Database.SetInitializer<TenantContext>(null);
+
+            // Ask shard map to broker a validated connection for the given key
+            SqlConnection sqlConn = shardMap.OpenConnectionForKey(shardingKey, connectionStr);
+
+            return sqlConn;
         }
 
         public virtual DbSet<EventsWithNoTicket> EventsWithNoTickets { get; set; }

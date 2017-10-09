@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using Events_Tenant.Common.Models;
+using Events_TenantUserApp.EF.CatalogDB;
 using Events_TenantUserApp.EF.TenantsDB;
 
 namespace Events_Tenant.Common.Mapping
@@ -8,6 +9,21 @@ namespace Events_Tenant.Common.Mapping
     public static class Mapper
     {
         #region Entity To Model Mapping
+
+        public static TenantModel ToTenantModel(this Tenants tenantEntity)
+        {
+            string tenantIdInString = BitConverter.ToString(tenantEntity.TenantId);
+            tenantIdInString = tenantIdInString.Replace("-", "");
+
+            return new TenantModel
+            {
+                ServicePlan = tenantEntity.ServicePlan,
+                TenantId = ConvertByteKeyIntoInt(tenantEntity.TenantId),
+                TenantName = tenantEntity.TenantName,
+                TenantIdInString = tenantIdInString
+            };
+        }
+
         public static CountryModel ToCountryModel(this Countries country)
         {
             return new CountryModel
@@ -27,9 +43,7 @@ namespace Events_Tenant.Common.Mapping
                 PostalCode = customer.PostalCode,
                 LastName = customer.LastName,
                 CountryCode = customer.CountryCode,
-                CustomerId = customer.CustomerId,
-                VenueId = customer.VenueId,
-                RowVersion = customer.RowVersion
+                CustomerId = customer.CustomerId
             };
         }
 
@@ -39,9 +53,7 @@ namespace Events_Tenant.Common.Mapping
             {
                 EventId = eventsection.EventId,
                 Price = eventsection.Price,
-                SectionId = eventsection.SectionId,
-                VenueId = eventsection.VenueId,
-                RowVersion = eventsection.RowVersion
+                SectionId = eventsection.SectionId
             };
         }
 
@@ -52,9 +64,7 @@ namespace Events_Tenant.Common.Mapping
                 Date = eventEntity.Date,
                 EventId = eventEntity.EventId,
                 EventName = eventEntity.EventName.Trim(),
-                SubTitle = eventEntity.Subtitle.Trim(),
-                VenueId = eventEntity.VenueId,
-                RowVersion = eventEntity.RowVersion
+                SubTitle = eventEntity.Subtitle.Trim()
             };
         }
 
@@ -66,25 +76,20 @@ namespace Events_Tenant.Common.Mapping
                 SeatsPerRow = section.SeatsPerRow,
                 SectionName = section.SectionName,
                 SeatRows = section.SeatRows,
-                StandardPrice = section.StandardPrice,
-                VenueId = section.VenueId,
-                RowVersion = section.RowVersion
+                StandardPrice = section.StandardPrice
             };
         }
 
-        public static VenuesModel ToVenueModel(this Venues venueModel)
+        public static VenueModel ToVenueModel(this Venue venueModel)
         {
-            return new VenuesModel
+            return new VenueModel
             {
                 VenueName = venueModel.VenueName.Trim(),
                 AdminEmail = venueModel.AdminEmail.Trim(),
                 AdminPassword = venueModel.AdminPassword,
                 CountryCode = venueModel.CountryCode.Trim(),
                 PostalCode = venueModel.PostalCode,
-                VenueType = venueModel.VenueType.Trim(),
-                VenueId = venueModel.VenueId,
-                RowVersion = venueModel.RowVersion,
-                VenueNameInString = venueModel.VenueName.ToLower().Replace(" ", ""),
+                VenueType = venueModel.VenueType.Trim()
             };
         }
 
@@ -113,9 +118,7 @@ namespace Events_Tenant.Common.Mapping
                 Email = customeModel.Email,
                 FirstName = customeModel.FirstName,
                 LastName = customeModel.LastName,
-                PostalCode = customeModel.PostalCode,
-                VenueId = customeModel.VenueId,
-                RowVersion = customeModel.RowVersion
+                PostalCode = customeModel.PostalCode
             };
         }
 
@@ -126,9 +129,7 @@ namespace Events_Tenant.Common.Mapping
             {
                 CustomerId = ticketPurchaseModel.CustomerId,
                 PurchaseDate = DateTime.Now,
-                PurchaseTotal = ticketPurchaseModel.PurchaseTotal,
-                VenueId = ticketPurchaseModel.VenueId,
-                RowVersion = ticketPurchaseModel.RowVersion
+                PurchaseTotal = ticketPurchaseModel.PurchaseTotal
             };
         }
 
@@ -140,8 +141,7 @@ namespace Events_Tenant.Common.Mapping
                 SectionId = ticketModel.SectionId,
                 EventId = ticketModel.EventId,
                 RowNumber = ticketModel.RowNumber,
-                SeatNumber = ticketModel.SeatNumber,
-                VenueId = ticketModel.VenueId
+                SeatNumber = ticketModel.SeatNumber
             };
         }
 
