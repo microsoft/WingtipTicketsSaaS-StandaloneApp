@@ -7,8 +7,5 @@
         public short SeatRows { get; set; }
         public short SeatsPerRow { get; set; }
         public decimal StandardPrice { get; set; }
-        public int VenueId { get; set; }
-        public byte[] RowVersion { get; set; }
     }
 }
-

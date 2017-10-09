@@ -15,8 +15,6 @@
     ViewData["Title"] = @Localizer["Events Hub"].Value;
 }
 
-
-
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
 <!-- Content -->
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
@@ -58,14 +56,14 @@
                     @{
                         if (Model != null)
                         {
-                            foreach (var venue in Model)
+                            foreach (var tenant in Model)
                             {
                                 <tr>
                                     <th style="display: none;">
-                                        <a href="@Url.Action("Index", "Events", new {tenant = venue.VenueNameInString})" t target="_blank">@venue.VenueName </a>
+                                        <a href="@Url.Action("Index", "Events", new {tenant = tenant.TenantName})" target="_blank">@tenant.VenueName </a>
                                     </th>
                                     <th>
-                                        <a href="@Url.Action("Index", "Events", new {tenant = venue.VenueNameInString})" t target="_blank">@venue.VenueName </a>
+                                        <a href="@Url.Action("Index", "Events", new {tenant = tenant.TenantName})" target="_blank">@tenant.VenueName </a>
                                     </th>
                                 </tr>
                             }

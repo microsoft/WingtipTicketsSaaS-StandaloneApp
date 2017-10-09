@@ -4,7 +4,7 @@ using Events_Tenant.Common.Models;
 
 namespace Events_Tenant.Common.Interfaces
 {
-   public interface ITenantRepository
+    public interface ITenantRepository
     {
         #region Countries
 
@@ -56,9 +56,9 @@ namespace Events_Tenant.Common.Interfaces
 
         #region Venues
 
-        Task<List<VenuesModel>> GetAllVenues();
-        Task<VenuesModel> GetVenueByName(string tenantName);
-        Task<VenuesModel> GetVenueById(int tenantId);
+        Task<VenueModel> GetVenueDetails(int tenantId);
+        Task<VenueModel> GetVenueByName(string tenantName);
+        Task<VenueModel> GetVenueById(int tenantId);
 
         #endregion
 

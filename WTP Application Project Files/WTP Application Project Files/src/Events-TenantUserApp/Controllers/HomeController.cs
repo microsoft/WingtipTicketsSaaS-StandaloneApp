@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Events_Tenant.Common.Interfaces;
-using Events_Tenant.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace Events_TenantUserApp.Controllers
 {
@@ -21,10 +19,9 @@ namespace Events_TenantUserApp.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController" /> class.
         /// </summary>
-        /// <param name="catalogRepository">The tenants repository.</param>
         /// <param name="tenantRepository">The venues repository.</param>
         /// <param name="logger">The logger.</param>
-        public HomeController( ITenantRepository tenantRepository, ILogger<HomeController> logger)
+        public HomeController(ITenantRepository tenantRepository, ILogger<HomeController> logger)
         {
             _tenantRepository = tenantRepository;
             _logger = logger;
@@ -42,8 +39,7 @@ namespace Events_TenantUserApp.Controllers
         {
             try
             {
-                var venues = await _tenantRepository.GetAllVenues();
-                return View(venues);
+                return RedirectToAction("Index", "Events", new { tenant = "contosoconcerthall" });
             }
             catch (Exception ex)
             {

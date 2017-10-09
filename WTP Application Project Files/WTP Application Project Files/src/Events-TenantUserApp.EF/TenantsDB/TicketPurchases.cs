@@ -10,7 +10,6 @@ namespace Events_TenantUserApp.EF.TenantsDB
             Tickets = new HashSet<Tickets>();
         }
 
-        public int VenueId { get; set; }
         public int TicketPurchaseId { get; set; }
         public DateTime PurchaseDate { get; set; }
         public decimal PurchaseTotal { get; set; }
@@ -18,6 +17,6 @@ namespace Events_TenantUserApp.EF.TenantsDB
         public byte[] RowVersion { get; set; }
 
         public virtual ICollection<Tickets> Tickets { get; set; }
-        public virtual Customers Customers { get; set; }
+        public virtual Customers Customer { get; set; }
     }
 }

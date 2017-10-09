@@ -76,7 +76,7 @@ namespace Events_TenantUserApp
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            //register catalog DB
+            //register tenant DB
             services.AddDbContext<TenantDbContext>(options => options.UseSqlServer(GetTenantConnectionString(TenantServerConfig, DatabaseConfig)));
 
             //Add Application services
@@ -88,8 +88,6 @@ namespace Events_TenantUserApp
             var provider = services.BuildServiceProvider();
             _utilities = provider.GetService<IUtilities>();
             _tenantRepository = provider.GetService<ITenantRepository>();
-            if(TenantServerConfig.ResetEventDates)
-                _utilities.ResetEventDates(GetTenantConnectionString(TenantServerConfig, DatabaseConfig));
         }
 
         /// <summary>
@@ -180,15 +178,15 @@ namespace Events_TenantUserApp
 
         #region Private methods
         /// <summary>
-        ///  Gets the catalog connection string using the app settings
+        ///  Gets the tenant connection string using the app settings
         /// </summary>
-        /// <param name="catalogConfig">The catalog configuration.</param>
+        /// <param name="tenantConfig">The tenant server configuration.</param>
         /// <param name="databaseConfig">The database configuration.</param>
         /// <returns></returns>
         private string GetTenantConnectionString(TenantServerConfig tenantConfig, DatabaseConfig databaseConfig)
         {
             return $"Server=tcp:{tenantConfig.TenantServer},1433;Database={tenantConfig.TenantDatabase};User ID={databaseConfig.DatabaseUser};Password={databaseConfig.DatabasePassword};Trusted_Connection=False;Encrypt=True;";
-            
+
         }
 
         /// <summary>

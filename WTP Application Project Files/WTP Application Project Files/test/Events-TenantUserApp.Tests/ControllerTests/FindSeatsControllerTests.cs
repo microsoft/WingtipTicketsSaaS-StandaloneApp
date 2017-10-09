@@ -93,8 +93,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 Date = DateTime.Now,
                 EventId = 1,
                 EventName = "String Serenades",
-                SubTitle = "Contoso Chamber Orchestra",
-                VenueId = 1976168774
+                SubTitle = "Contoso Chamber Orchestra"
             };
         }
 
@@ -121,15 +120,13 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 {
                     EventId = 1,
                     Price = 100,
-                    SectionId = 1,
-                    VenueId = 1976168774
+                    SectionId = 1
                 },
                 new EventSectionModel
                 {
                     EventId = 2,
                     Price = 1500,
-                    SectionId = 1,
-                    VenueId = 1976168774
+                    SectionId = 1
                 }
             };
         }
@@ -144,8 +141,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     SectionId = 1,
                     SeatsPerRow = 30,
                     SectionName = "Main Auditorium Stage",
-                    StandardPrice = 100,
-                    VenueId = 1976168774
+                    StandardPrice = 100
                 },
                 new SectionModel
                 {
@@ -153,8 +149,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     SectionId = 2,
                     SeatsPerRow = 30,
                     SectionName = "Main Auditorium Middle",
-                    StandardPrice = 80,
-                    VenueId = 1976168774
+                    StandardPrice = 80
                 }
             };
         }
@@ -167,8 +162,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 SectionId = 1,
                 SeatsPerRow = 30,
                 SectionName = "Main Auditorium Stage",
-                StandardPrice = 100,
-                VenueId = 1976168774
+                StandardPrice = 100
             };
         }
 
@@ -177,8 +171,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             return new TicketPurchaseModel
             {
                 CustomerId = 5,
-                PurchaseTotal = 100,
-                VenueId = 1976168774
+                PurchaseTotal = 100
             };
         }
 
@@ -190,8 +183,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 SectionId = 1,
                 EventId = 1,
                 RowNumber = 1000,
-                SeatNumber = 1001,
-                VenueId = 1976168774
+                SeatNumber = 1001
             });
             return t;
         }

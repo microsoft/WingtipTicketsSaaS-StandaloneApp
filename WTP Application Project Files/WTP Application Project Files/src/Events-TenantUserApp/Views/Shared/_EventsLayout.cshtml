@@ -10,7 +10,6 @@
 @using Microsoft.AspNetCore.Http
 ﻿@inject IViewLocalizer Localizer
 
-
 @{
     Layout = "_Layout";
     var urlPath = Context.Request.Path.Value;
@@ -53,10 +52,10 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="col-xs-12">
-                        <a href="/Home/Index">
-                            <img class="logo-image pull-left" src="~/images/ticketmaestro-logo.jpg" />
-                            <h1 id="venueName" class="logo-heading">@tenantConfig.VenueName</h1>
-                        </a>
+                    <a href="/Home/Index">
+                        <img class="logo-image pull-left" src="~/images/ticketmaestro-logo.jpg" />
+                        <h1 id="venueName" class="logo-heading">@tenantConfig.VenueName</h1>
+                    </a>
                 </div>
                 <div class="col-xs-1">
                 </div>
@@ -90,7 +89,7 @@
                                 {
                                     <li>
                                         <div class="menu-border-welcome">@Localizer["WELCOME"] @user.FirstName.ToUpper()</div>
-                                        @Html.ActionLink(signOffText, "Logout", "Account", new {email = user.Email}, new {@class = "no-padding"})
+                                        @Html.ActionLink(signOffText, "Logout", "Account", new { email = user.Email }, new { @class = "no-padding" })
                                     </li>
                                 }
                                 else
@@ -147,8 +146,8 @@
                         <div class="copyright col-xs-12 text-left" style="margin-right: 10px;">
                             <p>
                                 @Localizer["Running on Azure SQL Database."] &copy; @DateTime.Now.Year @Localizer["Microsoft"]<br />
-                                @Localizer["server:"] @Startup.TenantServerConfig.TenantServer <br />
-                                @Localizer["database:"] @Startup.TenantServerConfig.TenantDatabase &nbsp; &nbsp; &nbsp; @Localizer["tenant id:"] @tenantConfig.TenantId
+                                @Localizer["server:"] @tenantConfig.DatabaseServerName <br />
+                                @Localizer["database:"] @tenantConfig.DatabaseName &nbsp; &nbsp; &nbsp; @Localizer["tenant id:"] @tenantConfig.TenantIdInString
                             </p>
                         </div>
                     </div>
@@ -178,7 +177,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <img class="logo-image pull-left" src="~/images/ticketmaestro-logo.jpg" />
                 <h1 class="logo-heading" id="modalVenueName">@tenantConfig.VenueName</h1>
-                <div class="col-xs-5" style="padding-top:20px" >
+                <div class="col-xs-5" style="padding-top:20px">
                     <h2 class="sub-heading">
                         @Localizer["My Account"]
                     </h2>
@@ -236,7 +235,7 @@
                             </div>
                             <div class="form-group">
                                 @*<input type="text" class="form-control" id ="postalCode" name="postalCode" placeholder=@Localizer["Zip/postal code"]>*@
-                                <input type="text" class="form-control" id ="postalCode" name="postalCode" placeholder="Zip/postal code">
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="Zip/postal code">
                             </div>
 
                             <button type="submit" class="btn btn-themed" id="newCustomerRegistration" name="newCustomerRegistration">@Localizer["Register"]</button>
@@ -252,7 +251,7 @@
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
 
 <div class="modal fade" id="AlertModal" tabindex="-1" role="dialog" @*aria-labelledby="ConfirmationModal" *@ @*aria-hidden="true" *@>
-    <div class="modal-dialog modal-lg" >
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" style="margin:20%;">
 
             <div class="modal-header">
@@ -276,7 +275,7 @@
 
                     <div class="col-xs-12">
                         <p id="AlertMessage"></p>
-                        <br/>
+                        <br />
                         <button type="button" class="btn btn-block btn-themed" id="currentCustomerRegistration" name="currentCustomerRegistration" data-dismiss="modal" data-backdrop="static" data-keyboard="false">@Localizer["Close"]</button>
                     </div>
 
@@ -288,7 +287,7 @@
 
 <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
 <script language="javascript" type="text/javascript">
-    
+
     document.title = '@Localizer["Events"]: @tenantConfig.VenueName @tenantConfig.User';
 
     function showAlert(heading, message) {

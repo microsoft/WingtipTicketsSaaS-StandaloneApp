@@ -15,14 +15,13 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         private int _tenantId;
         private int _numberOfTicketPurchases;
         private int _ticketsSold;
-        private string _tenantName;
+
 
         [TestInitialize]
         public void Setup()
         {
             _tenantRepository = new MockTenantRepository();
-            _tenantId = 1976168774;
-            _tenantName = "Contoso Concert Hall";
+            _tenantId = 1368421345;
             _numberOfTicketPurchases = 1;
             _ticketsSold = 1;
 
@@ -53,7 +52,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task AddCustomerTest()
+        public void AddCustomerTest()
         {
             var result = (_tenantRepository.AddCustomer(CreateCustomerModel(), _tenantId)).Result;
 
@@ -152,7 +151,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task AddTicketPurchaseTest()
+        public void AddTicketPurchaseTest()
         {
             var ticketPurchaseModel = new TicketPurchaseModel
             {
@@ -171,7 +170,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task GetNumberOfTicketPurchasesTest()
+        public void GetNumberOfTicketPurchasesTest()
         {
             var result = (_tenantRepository.GetNumberOfTicketPurchases(_tenantId)).Result;
 
@@ -200,7 +199,7 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task GetTicketsSoldTest()
+        public void GetTicketsSoldTest()
         {
             var result = (_tenantRepository.GetTicketsSold(1, 1, _tenantId)).Result;
 
@@ -208,39 +207,17 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task GetVenueByNameTest()
+        public async Task GetVenueDetailsTest()
         {
-            var result = await _tenantRepository.GetVenueByName(_tenantName);
+            var result = await _tenantRepository.GetVenueDetails(_tenantId);
 
             Assert.IsNotNull(result);
             Assert.AreEqual("USA", result.CountryCode);
             Assert.AreEqual("pop", result.VenueType);
-            Assert.AreEqual("Contoso Concert Hall", result.VenueName);
+            Assert.AreEqual("Venue 1", result.VenueName);
             Assert.AreEqual("123", result.PostalCode);
             Assert.AreEqual("admin@email.com", result.AdminEmail);
             Assert.AreEqual("password", result.AdminPassword);
-        }
-
-        [TestMethod]
-        public async Task GetVenueByIdTest()
-        {
-            var result = await _tenantRepository.GetVenueById(_tenantId);
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual("USA", result.CountryCode);
-            Assert.AreEqual("pop", result.VenueType);
-            Assert.AreEqual("Contoso Concert Hall", result.VenueName);
-            Assert.AreEqual("123", result.PostalCode);
-            Assert.AreEqual("admin@email.com", result.AdminEmail);
-            Assert.AreEqual("password", result.AdminPassword);
-        }
-
-        [TestMethod]
-        public async Task GetAllVenuesTest()
-        {
-            var result = await _tenantRepository.GetAllVenues();
-            Assert.IsNotNull(result);
-            Assert.AreEqual( 1, result.Count);
         }
 
         [TestMethod]

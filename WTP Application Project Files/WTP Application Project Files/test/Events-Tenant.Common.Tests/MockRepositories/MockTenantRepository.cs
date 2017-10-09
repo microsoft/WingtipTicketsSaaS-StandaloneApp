@@ -17,7 +17,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
         private List<TicketPurchaseModel> TicketPurchaseModels { get; set; }
         private List<TicketModel> TicketModels { get; set; }
         private List<EventModel> EventModels { get; set; }
-        private List<VenuesModel> VenuesModels { get; set; }
+        private List<VenueModel> VenuesModels { get; set; }
         #endregion
 
         public MockTenantRepository()
@@ -38,22 +38,19 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                 {
                     SectionId = 1,
                     EventId = 1,
-                    Price = 100,
-                    VenueId = 1976168774
+                    Price = 100
                 },
                 new EventSectionModel
                 {
                     SectionId = 2,
                     EventId = 1,
-                    Price = 80,
-                    VenueId = 1976168774
+                    Price = 80
                 },
                 new EventSectionModel
                 {
                     SectionId = 3,
                     EventId = 1,
-                    Price = 60,
-                    VenueId = 1976168774
+                    Price = 60
                 }
             };
 
@@ -65,8 +62,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SeatsPerRow = 10,
                     SectionName = "section 1",
                     StandardPrice = 100,
-                    SeatRows = 4,
-                    VenueId = 1976168774
+                    SeatRows = 4
                 },
                 new SectionModel
                 {
@@ -74,8 +70,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     SeatsPerRow = 20,
                     SectionName = "section 2",
                     StandardPrice = 80,
-                    SeatRows = 5,
-                    VenueId = 1976168774
+                    SeatRows = 5
                 }
             };
 
@@ -86,8 +81,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     CustomerId = 1,
                     PurchaseTotal = 2,
                     TicketPurchaseId = 5,
-                    PurchaseDate = DateTime.Now,
-                    VenueId = 1976168774
+                    PurchaseDate = DateTime.Now
                 }
             };
 
@@ -100,8 +94,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     TicketPurchaseId = 12,
                     SeatNumber = 50,
                     RowNumber = 2,
-                    TicketId = 2,
-                    VenueId = 1976168774
+                    TicketId = 2
                 }
             };
 
@@ -112,22 +105,20 @@ namespace Events_Tenant.Common.Tests.MockRepositories
                     EventId = 1,
                     EventName = "Event 1",
                     Date = DateTime.Now,
-                    SubTitle = "Event 1 Subtitle",
-                    VenueId = 1976168774
+                    SubTitle = "Event 1 Subtitle"
                 },
                 new EventModel
                 {
                     EventId = 2,
                     EventName = "Event 2",
                     Date = DateTime.Now,
-                    SubTitle = "Event 2 Subtitle",
-                    VenueId = 1976168774
+                    SubTitle = "Event 2 Subtitle"
                 }
             };
 
-            VenuesModels = new List<VenuesModel>
+            VenuesModels = new List<VenueModel>
             {
-                new VenuesModel
+                new VenueModel
                 {
                     CountryCode = "USA",
                     VenueType = "pop",
@@ -152,7 +143,6 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<int> AddCustomer(CustomerModel customerModel, int tenantId)
         {
-            customerModel.VenueId = tenantId;
             CustomerModels.Add(customerModel);
             return customerModel.CustomerId;
         }
@@ -164,36 +154,34 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<List<EventSectionModel>> GetEventSections(int eventId, int tenantId)
         {
-            return EventSectionModels.Where(i => i.EventId == eventId && i.VenueId == tenantId).ToList();
+            return EventSectionModels.Where(i => i.EventId == eventId).ToList();
         }
 
         public async Task<List<SectionModel>> GetSections(List<int> sectionIds, int tenantId)
         {
-            return SectionModels.Where(i => sectionIds.Contains(i.SectionId) && i.VenueId == tenantId).ToList();
+            return SectionModels.Where(i => sectionIds.Contains(i.SectionId)).ToList();
         }
 
         public async Task<SectionModel> GetSection(int sectionId, int tenantId)
         {
-            return SectionModels.Where(i => i.VenueId == tenantId).FirstOrDefault();
+            return SectionModels.FirstOrDefault();
         }
 
         public async Task<int> AddTicketPurchase(TicketPurchaseModel ticketPurchaseModel, int tenantId)
         {
-            ticketPurchaseModel.VenueId = tenantId;
             TicketPurchaseModels.Add(ticketPurchaseModel);
             return ticketPurchaseModel.TicketPurchaseId;
         }
 
         public async Task<int> GetNumberOfTicketPurchases(int tenantId)
         {
-            return TicketPurchaseModels.Where(i => i.VenueId == tenantId).Count();
+            return TicketPurchaseModels.Count();
         }
 
         public async Task<bool> AddTicket(List<TicketModel> ticketModel, int tenantId)
         {
             foreach (TicketModel tkt in ticketModel)
             {
-                tkt.VenueId = tenantId;
                 TicketModels.Add(tkt);
             }
             return true;
@@ -201,23 +189,29 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<int> GetTicketsSold(int sectionId, int eventId, int tenantId)
         {
-            return TicketModels.Where(i => i.VenueId == tenantId).Count();
+            return TicketModels.Count();
         }
 
-        public async Task<List<VenuesModel>> GetAllVenues()
+        public async Task<List<VenueModel>> GetAllVenues()
         {
             return VenuesModels.ToList();
         }
 
-        public async Task<VenuesModel> GetVenueByName(string tenantName)
+        public async Task<VenueModel> GetVenueByName(string tenantName)
         {
             return VenuesModels.Where(i => i.VenueName == tenantName).FirstOrDefault();
         }
 
-        public async Task<VenuesModel> GetVenueById(int tenantId)
+        public async Task<VenueModel> GetVenueById(int tenantId)
         {
             return VenuesModels.Where(i => i.VenueId == tenantId).FirstOrDefault();
         }
+
+        public async Task<VenueModel> GetVenueDetails(int tenantId)
+        {
+            return VenuesModels.FirstOrDefault();
+        }
+
         public async Task<VenueTypeModel> GetVenueType(string venueType, int tenantId)
         {
             return new VenueTypeModel
@@ -233,12 +227,13 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<List<EventModel>> GetEventsForTenant(int tenantId)
         {
-            return EventModels.Where(i => i.VenueId == tenantId).ToList();
+            return EventModels.ToList();
         }
 
         public async Task<EventModel> GetEvent(int eventId, int tenantId)
         {
-            return EventModels.Where(i => i.EventId == eventId && i.VenueId == tenantId).FirstOrDefault();
+            return EventModels.Where(i => i.EventId == eventId).FirstOrDefault();
         }
+
     }
 }

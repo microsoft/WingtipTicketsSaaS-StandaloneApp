@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Events_Tenant.Common.Interfaces;
 using Events_Tenant.Common.Models;
-using Events_Tenant.Common.Utilities;
 using Events_TenantUserApp.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -48,9 +47,9 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         }
 
-        private async Task<VenuesModel> GetVenue()
+        private async Task<VenueModel> GetVenue()
         {
-            return new VenuesModel
+            return new VenueModel
             {
                 VenueName = "Venue 1",
                 PostalCode = "741",
@@ -101,16 +100,14 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                     Date = DateTime.Now,
                     EventId = 1,
                     EventName = "String Serenades",
-                    SubTitle = "Contoso Chamber Orchestra",
-                    VenueId = 1976168774
+                    SubTitle = "Contoso Chamber Orchestra"
                 },
                 new EventModel
                 {
                     Date = DateTime.Now,
                     EventId = 2,
                     EventName = "Concert Pops",
-                    SubTitle = "Contoso Symphony",
-                    VenueId = 1976168774
+                    SubTitle = "Contoso Symphony"
                 }
             };
         }

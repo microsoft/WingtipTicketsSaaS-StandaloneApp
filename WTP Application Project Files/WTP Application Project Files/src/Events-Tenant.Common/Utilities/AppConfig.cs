@@ -18,16 +18,6 @@ namespace Events_Tenant.Common.Utilities
     }
 
     /// <summary>
-    /// The catalog settings
-    /// </summary>
-    public class CatalogConfig
-    {
-        public string CatalogServer { get; set; }
-        public string CatalogDatabase { get; set; }
-        public string ServicePlan { get; set; }
-    }
-
-    /// <summary>
     /// The Tenant server configs
     /// </summary>
     public class TenantServerConfig

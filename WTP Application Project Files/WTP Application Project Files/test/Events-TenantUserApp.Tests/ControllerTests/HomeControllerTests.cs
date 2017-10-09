@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Events_Tenant.Common.Interfaces;
 using Events_Tenant.Common.Models;
 using Events_TenantUserApp.Controllers;
@@ -27,8 +26,8 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         {
             var mockTenantRepo = new Mock<ITenantRepository>();
 
-            mockTenantRepo.Setup(repo => repo.GetAllVenues()).Returns(GetVenues());
             mockTenantRepo.Setup(repo => repo.GetVenueById(1234646)).Returns(GetVenueDetails());
+            mockTenantRepo.Setup(repo => repo.GetVenueByName("Venue Name")).Returns(GetVenueDetails());
 
             _homeController = new HomeController(mockTenantRepo.Object, logger);
         }
@@ -46,9 +45,9 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             Assert.Equal("Index", redirectToActionResult.ActionName);
         }
 
-        private async Task<VenuesModel> GetVenueDetails()
+        private async Task<VenueModel> GetVenueDetails()
         {
-            return new VenuesModel
+            return new VenueModel
             {
                 AdminEmail = "adminEmail",
                 AdminPassword = "Password",
@@ -56,24 +55,6 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 PostalCode = "123",
                 VenueName = "Venue Name",
                 VenueType = "classic"
-            };
-        }
-
-        private async Task<List<VenuesModel>> GetVenues()
-        {
-            return new List<VenuesModel>
-            {
-                new VenuesModel
-                {
-                    VenueNameInString = "contosoconcerthall",
-                    VenueName = "Contoso Concert Hall",
-                    VenueType = "classicalmusic",
-                    VenueId=1976168774,
-                    AdminEmail="admin@contosoconcerthall.com",
-                    AdminPassword=null,
-                    PostalCode="98052",
-                    CountryCode="USA"
-                }
             };
         }
     }
