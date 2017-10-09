@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using Events_Tenant.Common.Models;
 using Events_TenantUserApp.EF.TenantsDB;
 
@@ -129,28 +128,6 @@ namespace Events_Tenant.Common.Mapping
                 RowNumber = ticketModel.RowNumber,
                 SeatNumber = ticketModel.SeatNumber
             };
-        }
-
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Converts the byte key into int.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        private static int ConvertByteKeyIntoInt(byte[] key)
-        {
-            // Make a copy of the normalized array
-            byte[] denormalized = new byte[key.Length];
-
-            key.CopyTo(denormalized, 0);
-
-            // Flip the last bit and cast it to an integer
-            denormalized[0] ^= 0x80;
-
-            return IPAddress.HostToNetworkOrder(BitConverter.ToInt32(denormalized, 0));
         }
 
         #endregion

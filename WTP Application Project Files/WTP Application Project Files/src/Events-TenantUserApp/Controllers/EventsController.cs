@@ -11,6 +11,7 @@ namespace Events_TenantUserApp.Controllers
     public class EventsController : BaseController
     {
         #region Fields
+
         private readonly ITenantRepository _tenantRepository;
         private readonly ILogger _logger;
 
@@ -23,9 +24,8 @@ namespace Events_TenantUserApp.Controllers
             _logger = logger;
             _tenantRepository = tenantRepository;
         }
-
+        
         #endregion
-
 
         [Route("{tenant}")]
         public async Task<ActionResult> Index(string tenant)

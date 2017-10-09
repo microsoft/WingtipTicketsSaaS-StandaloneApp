@@ -15,12 +15,15 @@ namespace Events_TenantUserApp.Controllers
     public class BaseController : Controller
     {
         #region Fields
+
         private readonly IStringLocalizer<BaseController> _localizer;
         private readonly ITenantRepository _tenantRepository;
         private readonly IConfiguration _configuration;
+
         #endregion
 
         #region Constructors
+
         public BaseController(IStringLocalizer<BaseController> localizer, ITenantRepository tenantRepository, IConfiguration configuration)
         {
             _localizer = localizer;

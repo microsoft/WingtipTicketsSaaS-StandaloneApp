@@ -33,8 +33,7 @@ namespace Events_TenantUserApp.Controllers
         }
 
         #endregion
-
-
+        
         [Route("FindSeats")]
         public async Task<ActionResult> FindSeats(string tenant, int eventId)
         {

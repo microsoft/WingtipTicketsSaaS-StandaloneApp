@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using Events_Tenant.Common.Interfaces;
+﻿using Events_Tenant.Common.Interfaces;
 using Events_TenantUserApp.EF.TenantsDdEF6;
 
 namespace Events_Tenant.Common.Utilities
@@ -34,8 +27,6 @@ namespace Events_Tenant.Common.Utilities
             #endregion
         }
 
-
         #endregion
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using Events_Tenant.Common.Interfaces;
@@ -12,11 +11,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Events_TenantUserApp.EF.TenantsDB;
 
 namespace Events_TenantUserApp
 {
@@ -26,17 +23,22 @@ namespace Events_TenantUserApp
     public class Startup
     {
         #region Private fields
+
         private IUtilities _utilities;
         private ITenantRepository _tenantRepository;
+
         #endregion
 
         #region Public Properties
+
         public static DatabaseConfig DatabaseConfig { get; set; }
         public static TenantServerConfig TenantServerConfig { get; set; }
         public IConfigurationRoot Configuration { get; }
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -177,6 +179,7 @@ namespace Events_TenantUserApp
         #endregion
 
         #region Private methods
+
         /// <summary>
         ///  Gets the tenant connection string using the app settings
         /// </summary>
@@ -212,7 +215,7 @@ namespace Events_TenantUserApp
                 DefaultVenueName = Configuration["DefaultVenueName"],
             };
         }
-        #endregion
 
+        #endregion
     }
 }

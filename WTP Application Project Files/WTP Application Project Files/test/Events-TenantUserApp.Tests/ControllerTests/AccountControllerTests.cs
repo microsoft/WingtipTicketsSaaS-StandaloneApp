@@ -80,6 +80,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         {
             return 1;
         }
+
         private async Task<CustomerModel> GetCustomerAsync()
         {
             return new CustomerModel
@@ -91,6 +92,5 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 LastName = "lastName"
             };
         }
-
     }
 }

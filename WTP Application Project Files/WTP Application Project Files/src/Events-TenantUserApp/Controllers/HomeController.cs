@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Events_Tenant.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +9,7 @@ namespace Events_TenantUserApp.Controllers
     public class HomeController : Controller
     {
         #region Fields
+
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
@@ -28,7 +28,6 @@ namespace Events_TenantUserApp.Controllers
         }
 
         #endregion
-
 
         /// <summary>
         /// This method is hit when not passing any tenant name
