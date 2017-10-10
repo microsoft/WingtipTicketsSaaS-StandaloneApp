@@ -22,10 +22,10 @@
     "tenantServerName": "[concat('tenants1','-',variables('EnterpriseTenantSuffix'))]",
     "tenantDatabaseName": "tenants1",
     "tenantServer": "[concat(variables('tenantservername'),'-',variables('lowerCaseUser'))]",
-    "tenantDatabaseStorageUri": "https://wingtipsaas.blob.core.windows.net/vnext-bacpacs/contosoconcerthall.bacpac",
+    "tenantDatabaseStorageUri": "https://wingtipsaas.blob.core.windows.net/bacpacs-ent/contosoconcerthall.bacpac",
     "wtpEventsAppTrafficManagerUniqueDnsName": "[concat('events.wingtip','-',variables('lowerCaseUser'))]",
     "wtpEventsApp": "[concat('eventswingtip','-',variables('lowerCaseUser'))]",
-    "wtpEventsAppPackageUri": "https://wingtipsaas.blob.core.windows.net/packages-sd/eventsAppPackage.zip"
+    "wtpEventsAppPackageUri": "https://wingtipsaas.blob.core.windows.net/packages-ent/eventsAppPackage.zip"
   },
   "resources": [
     {
