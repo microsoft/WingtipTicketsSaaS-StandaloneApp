@@ -146,7 +146,7 @@ namespace Events_TenantUserApp.Controllers
                 }
 
                 //get the venue details and populate in config settings
-                var venueDetails = (_tenantRepository.GetVenueById(tenantId)).Result;
+                var venueDetails = (_tenantRepository.GetVenue()).Result;
                 var venueTypeDetails =
                     (_tenantRepository.GetVenueType(venueDetails.VenueType, tenantId)).Result;
                 var countries = (_tenantRepository.GetAllCountries(tenantId)).Result;

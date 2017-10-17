@@ -33,7 +33,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void LoginTest()
         {
             //Act
-            var result = _accountController.Login("tenantName", "test@email.com");
+            var result = _accountController.Login( "test@email.com");
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -44,7 +44,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void LogoutTest()
         {
             //Act
-            var result = _accountController.Logout("tenantName", "testemail@gmail.com");
+            var result = _accountController.Logout("testemail@gmail.com");
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -57,7 +57,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void RegisterCustomerTest()
         {
             //Act
-            var result = _accountController.Register("tenantName", GetCustomer());
+            var result = _accountController.Register(GetCustomer());
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);

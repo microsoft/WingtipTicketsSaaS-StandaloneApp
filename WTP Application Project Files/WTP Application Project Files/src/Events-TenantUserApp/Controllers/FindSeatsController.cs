@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Events_TenantUserApp.Controllers
 {
-    [Route("{tenant}/FindSeats")]
+    [Route("/FindSeats")]
     public class FindSeatsController : BaseController
     {
         #region Private varibles
@@ -33,15 +33,15 @@ namespace Events_TenantUserApp.Controllers
         }
 
         #endregion
-        
+
         [Route("FindSeats")]
-        public async Task<ActionResult> FindSeats(string tenant, int eventId)
+        public async Task<ActionResult> FindSeats(int eventId)
         {
             try
             {
                 if (eventId != 0)
                 {
-                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
+                    var tenantDetails = _tenantRepository.GetVenue().Result;
                     if (tenantDetails != null)
                     {
                         SetTenantConfig(tenantDetails.VenueId);
@@ -71,24 +71,24 @@ namespace Events_TenantUserApp.Controllers
                     }
                     else
                     {
-                        return View("TenantError", tenant);
+                        return View("Error");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "FindSeats failed for tenant {tenant} and event {eventId}", tenant, eventId);
-                return View("TenantError", tenant);
+                _logger.LogError(0, ex, "FindSeats failed for tenant");
+                return View("Error");
             }
-            return RedirectToAction("Index", "Events", new { tenant });
+            return RedirectToAction("Index", "Events");
         }
 
         [Route("GetAvailableSeats")]
-        public async Task<ActionResult> GetAvailableSeats(string tenant, int sectionId, int eventId)
+        public async Task<ActionResult> GetAvailableSeats(int sectionId, int eventId)
         {
             try
             {
-                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenue().Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);
@@ -102,12 +102,12 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    return View("TenantError", tenant);
+                    return View("Error");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "GetAvailableSeats failed for tenant {tenant} and event {eventId}", tenant, eventId);
+                _logger.LogError(0, ex, "GetAvailableSeats failed for tenant");
                 return Content("0");
             }
         }
@@ -115,7 +115,7 @@ namespace Events_TenantUserApp.Controllers
 
         [HttpPost]
         [Route("PurchaseTickets")]
-        public async Task<ActionResult> PurchaseTickets(string tenant, int eventId, int customerId, decimal ticketPrice, int ticketCount, int sectionId)
+        public async Task<ActionResult> PurchaseTickets(int eventId, int customerId, decimal ticketPrice, int ticketCount, int sectionId)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace Events_TenantUserApp.Controllers
                     CustomerId = customerId,
                     PurchaseTotal = ticketPrice
                 };
-                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenue().Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);
@@ -139,15 +139,15 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    return View("TenantError", tenant);
+                    return View("Error");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "Purchase tickets failed for tenant {tenant} and event {eventId}", tenant, eventId);
-                return View("TenantError", tenant);
+                _logger.LogError(0, ex, "Purchase tickets failed for tenant");
+                return View("Error");
             }
-            return RedirectToAction("Index", "Events", new { tenant });
+            return RedirectToAction("Index", "Events");
         }
     }
 }

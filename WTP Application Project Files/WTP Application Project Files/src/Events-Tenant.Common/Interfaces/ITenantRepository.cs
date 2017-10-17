@@ -55,8 +55,7 @@ namespace Events_Tenant.Common.Interfaces
         #region Venues
 
         Task<VenueModel> GetVenueDetails(int tenantId);
-        Task<VenueModel> GetVenueByName(string tenantName);
-        Task<VenueModel> GetVenueById(int tenantId);
+        Task<VenueModel> GetVenue();
 
         #endregion
 

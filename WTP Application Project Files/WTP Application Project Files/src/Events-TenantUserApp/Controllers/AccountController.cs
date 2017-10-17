@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Events_TenantUserApp.Controllers
 {
-    [Route("{tenant}/Account")]
+    [Route("/Account")]
     public class AccountController : BaseController
     {
         #region Fields
@@ -36,7 +36,7 @@ namespace Events_TenantUserApp.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult> Login(string tenant, string regEmail)
+        public async Task<ActionResult> Login(string regEmail)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
+                    var tenantDetails = _tenantRepository.GetVenue().Result;
 
                     if (tenantDetails != null)
                     {
@@ -57,7 +57,7 @@ namespace Events_TenantUserApp.Controllers
 
                         if (customer != null)
                         {
-                            customer.TenantName = tenant;
+                            customer.TenantName = tenantDetails.VenueName;
 
                             var userSessions = HttpContext.Session.GetObjectFromJson<List<CustomerModel>>("SessionUsers");
                             if (userSessions == null)
@@ -82,48 +82,50 @@ namespace Events_TenantUserApp.Controllers
                     }
                     else
                     {
-                        return View("TenantError", tenant);
+                        return View("Error");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "Login failed for tenant {tenant}", tenant);
+                _logger.LogError(0, ex, "Login failed for tenant");
+                return View("Error");
             }
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
         [Route("Logout")]
-        public ActionResult Logout(string tenant, string email)
+        public ActionResult Logout( string email)
         {
             try
             {
                 var userSessions = HttpContext.Session.GetObjectFromJson<List<CustomerModel>>("SessionUsers");
                 if (userSessions != null)
                 {
-                    userSessions.Remove(userSessions.First(a => a.Email.ToUpper() == email.ToUpper() && a.TenantName == tenant));
+                    userSessions.Remove(userSessions.First(a => a.Email.ToUpper() == email.ToUpper()));
                     HttpContext.Session.SetObjectAsJson("SessionUsers", userSessions);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "Log out failed for tenant {tenant}", tenant);
+                _logger.LogError(0, ex, "Log out failed for tenant");
+                return View("Error");
             }
-            return RedirectToAction("Index", "Events", new { tenant });
+            return RedirectToAction("Index", "Events");
         }
 
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult> Register(string tenant, CustomerModel customerModel)
+        public async Task<ActionResult> Register(CustomerModel customerModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction("Index", "Events", new { tenant });
+                    return RedirectToAction("Index", "Events");
                 }
 
-                var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
+                var tenantDetails = _tenantRepository.GetVenue().Result;
                 if (tenantDetails != null)
                 {
                     SetTenantConfig(tenantDetails.VenueId);
@@ -135,7 +137,7 @@ namespace Events_TenantUserApp.Controllers
                     {
                         var customerId = await _tenantRepository.AddCustomer(customerModel, tenantDetails.VenueId);
                         customerModel.CustomerId = customerId;
-                        customerModel.TenantName = tenant;
+                        customerModel.TenantName = tenantDetails.VenueName;
 
                         var userSessions = HttpContext.Session.GetObjectFromJson<List<CustomerModel>>("SessionUsers");
                         if (userSessions == null)
@@ -160,12 +162,13 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    return View("TenantError", tenant);
+                    return View("Error");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "Registration failed for tenant {tenant}", tenant);
+                _logger.LogError(0, ex, "Registration failed for tenant ");
+                return View("Error");
             }
             return Redirect(Request.Headers["Referer"].ToString());
         }

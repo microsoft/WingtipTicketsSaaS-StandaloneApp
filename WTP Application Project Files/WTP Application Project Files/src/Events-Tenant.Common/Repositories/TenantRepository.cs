@@ -215,21 +215,7 @@ namespace Events_Tenant.Common.Repositories
             }
         }
 
-        public async Task<VenueModel> GetVenueByName(string tenantName)
-        {
-            using (var context = CreateContext())
-            {
-                var tenants = await context.Venue.Where(i => Regex.Replace(i.VenueName.ToLower(), @"\s+", "") == tenantName).ToListAsync();
-                if (tenants.Any())
-                {
-                    var tenant = tenants.FirstOrDefault();
-                    return tenant?.ToVenueModel();
-                }
-            }
-            return null;
-        }
-
-        public async Task<VenueModel> GetVenueById(int tenantId)
+        public async Task<VenueModel> GetVenue()
         {
             using (var context = CreateContext())
             {
@@ -239,8 +225,7 @@ namespace Events_Tenant.Common.Repositories
                     databaseName = sqlConn.Database;
                     databaseServerName = sqlConn.DataSource.Split(':').Last().Split(',').First();
                 }
-
-                var tenants = await context.Venue.Where(i => i.VenueId == tenantId).ToListAsync();
+                var tenants = await context.Venue.ToListAsync();
                 if (tenants.Any())
                 {
                     var venueModel = tenants.FirstOrDefault()?.ToVenueModel();
@@ -251,7 +236,6 @@ namespace Events_Tenant.Common.Repositories
             }
             return null;
         }
-
         #endregion
 
         #region VenueTypes

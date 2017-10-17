@@ -11,7 +11,6 @@ namespace Events_TenantUserApp.Controllers
     public class EventsController : BaseController
     {
         #region Fields
-
         private readonly ITenantRepository _tenantRepository;
         private readonly ILogger _logger;
 
@@ -24,35 +23,35 @@ namespace Events_TenantUserApp.Controllers
             _logger = logger;
             _tenantRepository = tenantRepository;
         }
-        
+
         #endregion
 
-        [Route("{tenant}")]
-        public async Task<ActionResult> Index(string tenant)
+        public async Task<ActionResult> Index()
         {
             try
             {
-                if (!string.IsNullOrEmpty(tenant))
+                var tenantDetails = _tenantRepository.GetVenue().Result;
+                if (tenantDetails != null)
                 {
-                    var tenantDetails = _tenantRepository.GetVenueByName(tenant).Result;
-                    if (tenantDetails != null)
-                    {
-                        SetTenantConfig(tenantDetails.VenueId);
-
-                        var events = await _tenantRepository.GetEventsForTenant(tenantDetails.VenueId);
-                        return View(events);
-                    }
-                    else
-                    {
-                        return View("TenantError", tenant);
-                    }
+                    SetTenantConfig(tenantDetails.VenueId);
+                    var events = await _tenantRepository.GetEventsForTenant(tenantDetails.VenueId);
+                    return View(events);
+                }
+                else
+                {
+                    return View("Error");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "Get events failed for tenant {tenant}", tenant);
+                _logger.LogError(0, ex, "Get events failed for tenant");
             }
             return View("Error");
+        }
+
+        public IActionResult Error()
+        {
+            return View();
         }
     }
 }

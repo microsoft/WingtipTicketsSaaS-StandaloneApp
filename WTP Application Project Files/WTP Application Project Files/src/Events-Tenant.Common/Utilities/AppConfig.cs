@@ -30,7 +30,6 @@ namespace Events_Tenant.Common.Utilities
         ///   <c>true</c> if [reset event dates]; otherwise, <c>false</c>.
         /// </value>
         public bool ResetEventDates { get; set; }
-        public string DefaultVenueName { get; set; }
     }
 
     /// <summary>

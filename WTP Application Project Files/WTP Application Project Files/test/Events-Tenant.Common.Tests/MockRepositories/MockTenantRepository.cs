@@ -192,14 +192,9 @@ namespace Events_Tenant.Common.Tests.MockRepositories
             return TicketModels.Count();
         }
 
-        public async Task<VenueModel> GetVenueByName(string tenantName)
+        public async Task<VenueModel> GetVenue()
         {
-            return VenuesModels.FirstOrDefault(i => i.VenueName == tenantName);
-        }
-
-        public async Task<VenueModel> GetVenueById(int tenantId)
-        {
-            return VenuesModels.FirstOrDefault(i => i.VenueId == tenantId);
+            return VenuesModels.FirstOrDefault();
         }
 
         public async Task<VenueModel> GetVenueDetails(int tenantId)
