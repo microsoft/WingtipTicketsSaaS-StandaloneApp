@@ -193,9 +193,9 @@ namespace Events_Tenant.Common.Tests.RepositoriesTests
         }
 
         [TestMethod]
-        public async Task GetVenueDetailsTest()
+        public async Task GetVenueTest()
         {
-            var result = await _tenantRepository.GetVenueDetails(_tenantId);
+            var result = await _tenantRepository.GetVenue();
 
             Assert.IsNotNull(result);
             Assert.AreEqual("USA", result.CountryCode);

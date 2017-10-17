@@ -45,7 +45,7 @@ namespace Events_Tenant.Common.Repositories
         {
             using (var context = CreateContext())
             {
-                var country = await context.Countries.Where(x => x.CountryCode == countryCode).FirstOrDefaultAsync();
+                var country = await context.Countries.FirstOrDefaultAsync(x => x.CountryCode == countryCode);
                 return country?.ToCountryModel();
             }
         }
@@ -189,32 +189,6 @@ namespace Events_Tenant.Common.Repositories
         #endregion
 
         #region Venues
-
-        public async Task<VenueModel> GetVenueDetails(int tenantId)
-        {
-            using (var context = CreateContext())
-            {
-                //get database name
-                string databaseName, databaseServerName;
-                using (SqlConnection sqlConn = new SqlConnection(_connectionString))
-                {
-                    databaseName = sqlConn.Database;
-                    databaseServerName = sqlConn.DataSource.Split(':').Last().Split(',').First();
-                }
-
-                var venue = await context.Venue.FirstOrDefaultAsync();
-
-                if (venue != null)
-                {
-                    var venueModel = venue.ToVenueModel();
-                    venueModel.DatabaseName = databaseName;
-                    venueModel.DatabaseServerName = databaseServerName;
-                    return venueModel;
-                }
-                return null;
-            }
-        }
-
         public async Task<VenueModel> GetVenue()
         {
             using (var context = CreateContext())
@@ -223,7 +197,7 @@ namespace Events_Tenant.Common.Repositories
                 using (SqlConnection sqlConn = new SqlConnection(_connectionString))
                 {
                     databaseName = sqlConn.Database;
-                    databaseServerName = sqlConn.DataSource.Split(':').Last().Split(',').First();
+                    databaseServerName = sqlConn.DataSource.Split(':').Last().Split(',').FirstOrDefault();
                 }
                 var tenants = await context.Venue.ToListAsync();
                 if (tenants.Any())
