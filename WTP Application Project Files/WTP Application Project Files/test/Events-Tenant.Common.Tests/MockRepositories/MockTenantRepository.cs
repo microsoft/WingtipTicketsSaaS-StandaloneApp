@@ -138,7 +138,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<CountryModel> GetCountry(string countryCode, int tenantId)
         {
-            return Countries.Where(i => i.CountryCode.Equals(countryCode)).FirstOrDefault();
+            return Countries.FirstOrDefault(i => i.CountryCode.Equals(countryCode));
         }
 
         public async Task<int> AddCustomer(CustomerModel customerModel, int tenantId)
@@ -149,7 +149,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<CustomerModel> GetCustomer(string email, int tenantId)
         {
-            return CustomerModels.Where(i => i.Email.Equals(email)).FirstOrDefault();
+            return CustomerModels.FirstOrDefault(i => i.Email.Equals(email));
         }
 
         public async Task<List<EventSectionModel>> GetEventSections(int eventId, int tenantId)
@@ -178,7 +178,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
             return TicketPurchaseModels.Count();
         }
 
-        public async Task<bool> AddTicket(List<TicketModel> ticketModel, int tenantId)
+        public async Task<bool> AddTickets(List<TicketModel> ticketModel, int tenantId)
         {
             foreach (TicketModel tkt in ticketModel)
             {
@@ -194,12 +194,12 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<VenueModel> GetVenueByName(string tenantName)
         {
-            return VenuesModels.Where(i => i.VenueName == tenantName).FirstOrDefault();
+            return VenuesModels.FirstOrDefault(i => i.VenueName == tenantName);
         }
 
         public async Task<VenueModel> GetVenueById(int tenantId)
         {
-            return VenuesModels.Where(i => i.VenueId == tenantId).FirstOrDefault();
+            return VenuesModels.FirstOrDefault(i => i.VenueId == tenantId);
         }
 
         public async Task<VenueModel> GetVenueDetails(int tenantId)
