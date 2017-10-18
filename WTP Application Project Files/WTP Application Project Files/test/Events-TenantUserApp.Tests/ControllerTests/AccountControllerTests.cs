@@ -33,7 +33,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void LoginTest()
         {
             //Act
-            var result = _accountController.Login( "test@email.com");
+            var result = _accountController.Login("test@email.com");
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -66,7 +66,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         private CustomerModel GetCustomer()
         {
-           return new CustomerModel
+            return new CustomerModel
             {
                 CountryCode = "USA",
                 PostalCode = "123",

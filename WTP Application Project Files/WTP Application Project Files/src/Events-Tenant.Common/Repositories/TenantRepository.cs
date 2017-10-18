@@ -8,7 +8,6 @@ using Events_Tenant.Common.Mapping;
 using Events_Tenant.Common.Models;
 using Events_TenantUserApp.EF.TenantsDB;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace Events_Tenant.Common.Repositories
 {

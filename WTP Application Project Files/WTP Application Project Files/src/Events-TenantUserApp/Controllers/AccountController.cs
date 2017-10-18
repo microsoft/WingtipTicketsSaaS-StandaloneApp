@@ -95,7 +95,7 @@ namespace Events_TenantUserApp.Controllers
         }
 
         [Route("Logout")]
-        public ActionResult Logout( string email)
+        public ActionResult Logout(string email)
         {
             try
             {

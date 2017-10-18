@@ -43,7 +43,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void FindSeatsTests_EventId_Null()
         {
-            var result = _findSeatsController.FindSeats( 0);
+            var result = _findSeatsController.FindSeats(0);
 
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.NotNull(redirectToActionResult.ControllerName);
@@ -55,7 +55,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void FindSeatsTests_EventId_NotNull()
         {
-            var result = _findSeatsController.FindSeats( 1);
+            var result = _findSeatsController.FindSeats(1);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -66,7 +66,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void GetAvailableSeatsTest()
         {
-            var result = _findSeatsController.GetAvailableSeats( 1, 1);
+            var result = _findSeatsController.GetAvailableSeats(1, 1);
 
             // Assert
             var contentResult = Assert.IsType<ContentResult>(result);

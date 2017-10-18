@@ -10,7 +10,6 @@
 @using Microsoft.AspNetCore.Http
 ﻿@inject IViewLocalizer Localizer
 
-
 @{
 
     TenantConfig tenantConfig = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs").First();
@@ -21,7 +20,7 @@
     <div class="col-xs-12 ">
         <div class="banner">
             <div class="row cover-2">
-                <img src = @blobpath class="img-responsive" style="width: 100%">
+                <img src=@blobpath class="img-responsive" style="width: 100%">
             </div>
             <div class="banner-home-left">
                 <div class="banner-caption">
