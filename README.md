@@ -1,7 +1,7 @@
 ## WingtipSaaS-StandaloneApp
 A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database, that might be installed in a tenant's subscription. 
 
-This project contains a sample Web application and management scripts that embody common patterns used with Azure SQL Database.  It is a simple event-management and ticket-selling app for a single venue.  As a standalone app, it could be installed in the ISV's or the venue's Azure subscription.  Venue data is stored in a single SQL database.  The app uses the same patterns that might be used if the venue wrote the application for themselves.    
+This project contains a sample Web application and management scripts that embody common patterns used with Azure SQL Database.  It is a simple event-management and ticket-selling app for a single venue, with data stored in a single database.  As a standalone app, it could be installed in the ISV's or the venue's Azure subscription. The app uses the same patterns that might be used if the venue wrote the application for themselves.    
 
 The application, which includes example data for the Contoso Concert Hall, can be installed in your Azure subscription within a single Azure resource group.  To uninstall the application, delete the resource group using the Azure Portal. 
 
