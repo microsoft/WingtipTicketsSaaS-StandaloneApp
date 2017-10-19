@@ -205,8 +205,12 @@ namespace Events_TenantUserApp
             {
                 TenantServer = Configuration["TenantServer"] + ".database.windows.net",
                 TenantDatabase = Configuration["TenantDatabase"],
-                ResetEventDates = Convert.ToBoolean(Configuration["ResetEventDates"]),
             };
+            bool isResetEventDatesEnabled = false;
+            if (bool.TryParse(Configuration["ResetEventDates"], out isResetEventDatesEnabled))
+            {
+                TenantServerConfig.ResetEventDates = isResetEventDatesEnabled;
+            }
         }
 
         #endregion
