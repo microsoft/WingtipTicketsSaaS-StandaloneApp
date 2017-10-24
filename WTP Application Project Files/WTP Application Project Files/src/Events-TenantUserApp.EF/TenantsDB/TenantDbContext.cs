@@ -38,7 +38,6 @@ namespace Events_TenantUserApp.EF.TenantsDB
             return options;
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Countries>(entity =>

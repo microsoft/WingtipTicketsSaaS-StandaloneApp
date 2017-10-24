@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Events_Tenant.Common.Interfaces;
 using Events_Tenant.Common.Models;
@@ -138,7 +138,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<CountryModel> GetCountry(string countryCode, int tenantId)
         {
-            return Countries.Where(i => i.CountryCode.Equals(countryCode)).FirstOrDefault();
+            return Countries.FirstOrDefault(i => i.CountryCode.Equals(countryCode));
         }
 
         public async Task<int> AddCustomer(CustomerModel customerModel, int tenantId)
@@ -149,7 +149,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
 
         public async Task<CustomerModel> GetCustomer(string email, int tenantId)
         {
-            return CustomerModels.Where(i => i.Email.Equals(email)).FirstOrDefault();
+            return CustomerModels.FirstOrDefault(i => i.Email.Equals(email));
         }
 
         public async Task<List<EventSectionModel>> GetEventSections(int eventId, int tenantId)
@@ -178,7 +178,7 @@ namespace Events_Tenant.Common.Tests.MockRepositories
             return TicketPurchaseModels.Count();
         }
 
-        public async Task<bool> AddTicket(List<TicketModel> ticketModel, int tenantId)
+        public async Task<bool> AddTickets(List<TicketModel> ticketModel, int tenantId)
         {
             foreach (TicketModel tkt in ticketModel)
             {
@@ -192,14 +192,9 @@ namespace Events_Tenant.Common.Tests.MockRepositories
             return TicketModels.Count();
         }
 
-        public async Task<VenueModel> GetVenueByName(string tenantName)
+        public async Task<VenueModel> GetVenue()
         {
-            return VenuesModels.Where(i => i.VenueName == tenantName).FirstOrDefault();
-        }
-
-        public async Task<VenueModel> GetVenueById(int tenantId)
-        {
-            return VenuesModels.Where(i => i.VenueId == tenantId).FirstOrDefault();
+            return VenuesModels.FirstOrDefault();
         }
 
         public async Task<VenueModel> GetVenueDetails(int tenantId)

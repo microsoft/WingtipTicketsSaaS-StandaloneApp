@@ -11,7 +11,6 @@
 @inject IViewLocalizer Localizer
 @model FindSeatViewModel
 
-
 @{
     Layout = "_EventsLayout";
 }
@@ -21,33 +20,19 @@
 }
 
 @{
-    var urlPath = Context.Request.Path.Value;
-    string[] urlPieces = urlPath.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-    var tenantName = urlPieces[0];
-
-    var tenantConfigs = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs");
-    TenantConfig tenantConfig = null;
-    if (tenantConfigs != null && tenantConfigs.Count() > 0)
-    {
-        tenantConfig = tenantConfigs.Where(a => a.TenantName == tenantName).First();
-    }
-
+    TenantConfig tenantConfig = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs").First();
+    var blobpath = tenantConfig.BlobImagePath;
     var users = Context.Session.GetObjectFromJson<List<CustomerModel>>("SessionUsers");
     CustomerModel user = null;
     if (users != null && users.Count() > 0)
     {
-        var usersList = users.Where(a => a.TenantName == tenantName);
-        if (usersList != null && usersList.Count() > 0)
-        {
-            user = usersList.Last();
-        }
+        user = users.Last();
     }
 }
 
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
 <!-- Heading Bar -->
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
-
 
 <div class="col-xs-12 ">
     <div class="banner">
@@ -67,11 +52,9 @@
 <div class="row row-underline-light" style="margin-left: 11px;">
 </div>
 
-
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
 <!-- Ticket Quantity Section -->
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
-
 
 <div class="col-xs-7">
 
@@ -152,8 +135,6 @@
 
 <div class="clearfix">
 </div>
-
-
 
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
 <!-- Ticket Purchase Dialog -->
@@ -264,8 +245,6 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -326,7 +305,6 @@
             });
         });
 
-
         $("#quantity").change(function() {
 
             var selectedSection = $("#section").val();
@@ -354,7 +332,6 @@
             $("#ticketPrice").val(total);
             $("#ticketCount").val(quantity);
         });
-
 
         var number = document.getElementById('quantity');
         // Listen for input event on numInput.

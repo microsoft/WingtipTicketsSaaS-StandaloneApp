@@ -25,8 +25,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         {
             var mockUtilities = new Mock<IUtilities>();
             var mockTenantRepo = new Mock<ITenantRepository>();
-            mockTenantRepo.Setup(repo => repo.GetVenueByName("testTenant")).Returns(GetVenue());
-            mockTenantRepo.Setup(repo => repo.GetVenueById(12345)).Returns(GetVenue());
+            mockTenantRepo.Setup(repo => repo.GetVenue()).Returns(GetVenue());
             mockTenantRepo.Setup(repo => repo.GetVenueType("Classic", 12345)).Returns(GetVenueType());
             mockTenantRepo.Setup(repo => repo.GetAllCountries(12345)).Returns(GetCountries());
             mockTenantRepo.Setup(repo => repo.GetEventsForTenant(12345)).Returns(GetEvents());
@@ -38,7 +37,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void Index_ReturnsView()
         {
             // Act
-            var result = _eventsController.Index("testTenant");
+            var result = _eventsController.Index();
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);

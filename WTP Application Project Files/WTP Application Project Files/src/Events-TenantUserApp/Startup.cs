@@ -109,7 +109,7 @@ namespace Events_TenantUserApp
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Events/Error");
             }
 
             app.UseStaticFiles();
@@ -158,19 +158,15 @@ namespace Events_TenantUserApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                    name: "default_route",
-                    template: "{tenant}/{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Events}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "TenantAccount",
-                    template: "{tenant}/{controller=Account}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "FindSeats",
-                    template: "{tenant}/{controller=FindSeats}/{action=Index}/{id?}");
+                    template: "{controller=FindSeats}/{action=Index}/{id?}");
 
             });
         }
@@ -209,9 +205,12 @@ namespace Events_TenantUserApp
             {
                 TenantServer = Configuration["TenantServer"] + ".database.windows.net",
                 TenantDatabase = Configuration["TenantDatabase"],
-                ResetEventDates = Convert.ToBoolean(Configuration["ResetEventDates"]),
-                DefaultVenueName = Configuration["DefaultVenueName"],
             };
+            bool isResetEventDatesEnabled = false;
+            if (bool.TryParse(Configuration["ResetEventDates"], out isResetEventDatesEnabled))
+            {
+                TenantServerConfig.ResetEventDates = isResetEventDatesEnabled;
+            }
         }
 
         #endregion

@@ -32,8 +32,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             mockTenantRepo.Setup(r => r.GetSections(seatSectionIds, 12345)).Returns(GetSeatSections());
             mockTenantRepo.Setup(r => r.GetSection(1, 12345)).Returns(GetSection());
             mockTenantRepo.Setup(r => r.GetTicketsSold(1, 1, 12345)).Returns(GetNumberOfTicketPurchased());
-            mockTenantRepo.Setup(r => r.AddTicket(GetTicketModel(), 12345)).Returns(GetBooleanValue());
-            mockTenantRepo.Setup(r => r.GetNumberOfTicketPurchases(12345)).Returns(GetNumberOfTicketPurchased());
+            mockTenantRepo.Setup(r => r.AddTickets(GetTicketModel(), 12345)).Returns(GetBooleanValue());
             mockTenantRepo.Setup(r => r.AddTicketPurchase(GetTicketPurchaseModel(), 12345)).Returns(GetTicketId());
 
             var mockUtilities = new Mock<IUtilities>();
@@ -44,7 +43,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void FindSeatsTests_EventId_Null()
         {
-            var result = _findSeatsController.FindSeats("tenantName", 0);
+            var result = _findSeatsController.FindSeats(0);
 
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.NotNull(redirectToActionResult.ControllerName);
@@ -56,7 +55,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void FindSeatsTests_EventId_NotNull()
         {
-            var result = _findSeatsController.FindSeats("tenantName", 1);
+            var result = _findSeatsController.FindSeats(1);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -67,7 +66,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void GetAvailableSeatsTest()
         {
-            var result = _findSeatsController.GetAvailableSeats("tenantName", 1, 1);
+            var result = _findSeatsController.GetAvailableSeats(1, 1);
 
             // Assert
             var contentResult = Assert.IsType<ContentResult>(result);
@@ -78,7 +77,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         [Fact]
         public void PurchaseTicketsTests()
         {
-            var result = _findSeatsController.PurchaseTickets("tenantName", "1", "5", "100", "2", "1");
+            var result = _findSeatsController.PurchaseTickets(1, 5, 100, 2, 1);
 
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.NotNull(redirectToActionResult.ControllerName);
