@@ -18,15 +18,13 @@
     "sqlTenantServiceObjectiveName": "S2",
     "sqlCollation": "SQL_Latin1_General_CP1_CI_AS",
     "sqlEdition": "Standard",
-    "EnterpriseTenantSuffix": "ent",
-    "EnterpriseTenantName": "contosoconcerthall",
-    "tenantServerName": "[concat('tenants1','-',variables('EnterpriseTenantSuffix'))]",
-    "tenantDatabaseName": "tenants1",
-    "tenantServer": "[concat(variables('tenantservername'),'-',variables('lowerCaseUser'))]",
-    "tenantDatabaseStorageUri": "https://wingtipsaas.blob.core.windows.net/bacpacs-ent/contosoconcerthall.bacpac",
-    "wtpEventsAppTrafficManagerUniqueDnsName": "[concat('events.',variables('EnterpriseTenantName'),'.',variables('lowerCaseUser'))]",
-    "wtpEventsApp": "[concat('events',variables('EnterpriseTenantName'),'-',variables('lowerCaseUser'))]",
-    "wtpEventsAppPackageUri": "https://wingtipsaas.blob.core.windows.net/packages-ent/eventsAppPackage.zip"
+    "standAloneAppTenantName": "contosoconcerthall",
+    "tenantDatabaseName": "contosoconcerthall",
+    "tenantServer": "[concat(variables('standAloneAppTenantName'),'-',variables('lowerCaseUser'))]",
+    "tenantDatabaseStorageUri": "https://wingtipsaas.blob.core.windows.net/bacpacs-sa/contosoconcerthall.bacpac",
+    "wtpEventsAppTrafficManagerUniqueDnsName": "[concat('events.',variables('standAloneAppTenantName'),'.',variables('lowerCaseUser'))]",
+    "wtpEventsApp": "[concat('events-',variables('standAloneAppTenantName'),'-',variables('lowerCaseUser'))]",
+    "wtpEventsAppPackageUri": "https://wingtipsaas.blob.core.windows.net/packages-sa/eventsAppPackage.zip"
   },
   "resources": [
     {
@@ -149,7 +147,7 @@
           "type": "config",
           "name": "appsettings",
           "properties": {
-            "BlobPath": "https://wingtipsaas.blob.core.windows.net/images-ent/",
+            "BlobPath": "https://wingtipsaas.blob.core.windows.net/images-sa/",
             "ConnectionTimeOut": "30",
             "DatabasePassword": "P@ssword1",
             "DatabaseServerPort": "1433",
