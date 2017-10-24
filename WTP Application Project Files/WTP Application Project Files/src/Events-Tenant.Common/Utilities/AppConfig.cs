@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Events_Tenant.Common.Models;
-using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
 
 namespace Events_Tenant.Common.Utilities
 {
@@ -14,17 +13,6 @@ namespace Events_Tenant.Common.Utilities
         public int DatabaseServerPort { get; set; }
         public int ConnectionTimeOut { get; set; }
         public string LearnHowFooterUrl { get; set; }
-        public SqlProtocol SqlProtocol { get; set; }
-    }
-
-    /// <summary>
-    /// The catalog settings
-    /// </summary>
-    public class CatalogConfig
-    {
-        public string CatalogServer { get; set; }
-        public string CatalogDatabase { get; set; }
-        public string ServicePlan { get; set; }
     }
 
     /// <summary>
@@ -33,7 +21,7 @@ namespace Events_Tenant.Common.Utilities
     public class TenantServerConfig
     {
         public string TenantServer { get; set; }
-
+        public string TenantDatabase { get; set; }
         /// <summary>
         /// Boolean value to specify if the events dates need to be reset
         /// This can be set to false when in Development mode
@@ -57,8 +45,9 @@ namespace Events_Tenant.Common.Utilities
         public string Currency { get; set; }
         public string TenantCulture { get; set; }
         public List<CountryModel> TenantCountries { get; set; }
-        public string TenantIdInString { get; set; }
         public string User { get; set; }
+        public string DatabaseName { get; set; }
+        public string DatabaseServerName { get; set; }
     }
 
 }

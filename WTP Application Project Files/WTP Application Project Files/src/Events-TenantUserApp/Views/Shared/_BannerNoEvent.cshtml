@@ -5,17 +5,7 @@
 ﻿@inject IViewLocalizer Localizer
 
 @{
-    var urlPath = Context.Request.Path.Value;
-    string[] urlPieces = urlPath.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-    var tenantName = urlPieces[0];
-
-    var tenantConfigs = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs");
-    TenantConfig tenantConfig = null;
-    if (tenantConfigs != null && tenantConfigs.Count() > 0)
-    {
-        tenantConfig = tenantConfigs.Where(a => a.TenantName == tenantName).First();
-    }
-
+    TenantConfig tenantConfig = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs").First();
     var blobpath = tenantConfig.BlobImagePath;
 }
 
@@ -30,7 +20,7 @@
                     <span>@Localizer["No Events Available"]</span>
                 </div>
             </div>
-           
+
         </div>
     </div>
 </div>

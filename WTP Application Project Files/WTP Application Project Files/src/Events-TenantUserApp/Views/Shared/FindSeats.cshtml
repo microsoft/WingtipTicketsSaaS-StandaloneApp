@@ -11,7 +11,6 @@
 @inject IViewLocalizer Localizer
 @model FindSeatViewModel
 
-
 @{
     Layout = "_EventsLayout";
 }
@@ -21,33 +20,19 @@
 }
 
 @{
-    var urlPath = Context.Request.Path.Value;
-    string[] urlPieces = urlPath.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-    var tenantName = urlPieces[0];
-
-    var tenantConfigs = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs");
-    TenantConfig tenantConfig = null;
-    if (tenantConfigs != null && tenantConfigs.Count() > 0)
-    {
-        tenantConfig = tenantConfigs.Where(a => a.TenantName == tenantName).First();
-    }
-
+    TenantConfig tenantConfig = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs").First();
+    var blobpath = tenantConfig.BlobImagePath;
     var users = Context.Session.GetObjectFromJson<List<CustomerModel>>("SessionUsers");
     CustomerModel user = null;
     if (users != null && users.Count() > 0)
     {
-        var usersList = users.Where(a => a.TenantName == tenantName);
-        if (usersList != null && usersList.Count() > 0)
-        {
-            user = usersList.Last();
-        }
+        user = users.Last();
     }
 }
 
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
 <!-- Heading Bar -->
 <!-- ------------------------------------------------------------------------------------------------------------------- -->
-
 
 <div class="col-xs-12 ">
     <div class="banner">
@@ -67,11 +52,9 @@
 <div class="row row-underline-light" style="margin-left: 11px;">
 </div>
 
-
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
 <!-- Ticket Quantity Section -->
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
-
 
 <div class="col-xs-7">
 
@@ -136,8 +119,8 @@
 <div class="col-md-3">
 </div>
 <div>
-   @if (user != null)
-   {
+    @if (user != null)
+    {
         <button id="purchaseTicket" type="button" class="btn btn-themed pull-right" data-toggle="modal" data-target=".modal-tickets" data-backdrop="static" style="margin-right: 10px;">
             @Localizer["Purchase tickets"]
         </button>
@@ -152,8 +135,6 @@
 
 <div class="clearfix">
 </div>
-
-
 
 <!-- -------------------------------------------------------------------------------------------------------------------------- -->
 <!-- Ticket Purchase Dialog -->
@@ -264,8 +245,6 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -275,7 +254,7 @@
         $("#purchaseTicket").attr('disabled','disabled');
 
         $("#quantity").keyup(function() {
-            if(($(this).val() != '') && ($(this).val() != '0')) {
+            if(($(this).val() != '') && (parseInt($(this).val(), 10) != '0') && (parseInt($("#quantity").val(), 10) <= parseInt($("#seatsAvailable")[0].innerText, 10))) {
                 $("#purchaseTicket").removeAttr('disabled');
             }
             else {
@@ -284,7 +263,7 @@
         });
 
         $("#quantity").click(function() {
-            if(($(this).val() != '') && ($(this).val() != '0')) {
+            if(($(this).val() != '') && (parseInt($(this).val(), 10) != '0') && (parseInt($("#quantity").val(), 10) <= parseInt($("#seatsAvailable")[0].innerText, 10))) {
                 $("#purchaseTicket").removeAttr('disabled');
             }
             else {
@@ -321,45 +300,44 @@
                     $("#seatsAvailable").html(data);
                 },
                 error: function() {
-                    alert("error");
+                    showAlert('Error',"@Localizer["Technical issues, please try again later!"].Value");
                 }
             });
         });
-
 
         $("#quantity").change(function() {
 
             var selectedSection = $("#section").val();
             var prices = $("#section option:selected").html();
-           
+
             var arr = prices.split('@tenantConfig.Currency');
             var sectionName = arr[0].trim();
 
             var price = Number(prices.replace(/[^0-9\.]+/g, ""));
             var quantity = parseInt($("#quantity").val(), 10);
             var availableSeats = parseInt($("#seatsAvailable")[0].innerText, 10);
-            if (quantity > availableSeats) {
-                @*alert(@Localizer["The quantity is invalid."]);*@
-                alert("The quantity is invalid.");
+            if (isNaN(quantity) || (quantity > availableSeats) || quantity == 0) {
+                showAlert('Error',"@Localizer["The quantity is invalid."].Value");
+                $("#purchaseTicket").attr('disabled', 'disabled');
+                var total = "0.00";
+                var totalPrice = total;
             } else {
                 var total = (price * quantity).toString();
                 var totalPrice = total;
-
-                $("#spanTotal1").html(totalPrice);
-                $("#spanTotal2").html(totalPrice);
-                $("#spanTicketQty").html(quantity + " " + sectionName);
-                $("#sectionId").val(selectedSection);
-                $("#ticketPrice").val(total);
-                $("#ticketCount").val(quantity);
             }
+            $("#spanTotal1").html(totalPrice);
+            $("#spanTotal2").html(totalPrice);
+            $("#spanTicketQty").html(quantity + " " + sectionName);
+            $("#sectionId").val(selectedSection);
+            $("#ticketPrice").val(total);
+            $("#ticketCount").val(quantity);
         });
-
 
         var number = document.getElementById('quantity');
         // Listen for input event on numInput.
         number.onkeydown = function(e) {
             if(!((e.keyCode > 95 && e.keyCode < 106)
-              || (e.keyCode > 47 && e.keyCode < 58) 
+              || (e.keyCode > 47 && e.keyCode < 58)
               || e.keyCode == 8)) {
                 return false;
             }

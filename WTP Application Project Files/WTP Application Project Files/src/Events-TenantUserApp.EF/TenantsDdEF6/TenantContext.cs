@@ -1,12 +1,8 @@
 using System.Data.Common;
-using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
 
 namespace Events_TenantUserApp.EF.TenantsDdEF6
 {
-    using System;
     using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
     using System.Data.SqlClient;
 
     public partial class TenantContext : DbContext
@@ -16,19 +12,19 @@ namespace Events_TenantUserApp.EF.TenantsDdEF6
         {
         }
 
-        public TenantContext(ShardMap shardMap,int shardingKey, string connectionStr)
-            : base(CreateDdrConnection(shardMap, shardingKey, connectionStr) , true)
+        public TenantContext(string connectionStr)
+            : base(CreateDdrConnection(connectionStr), true)
         {
 
         }
 
-        private static DbConnection CreateDdrConnection(ShardMap shardMap, int shardingKey, string connectionStr)
+        private static DbConnection CreateDdrConnection(string connectionStr)
         {
             // No initialization
             Database.SetInitializer<TenantContext>(null);
 
             // Ask shard map to broker a validated connection for the given key
-            SqlConnection sqlConn = shardMap.OpenConnectionForKey(shardingKey, connectionStr);
+            SqlConnection sqlConn = new SqlConnection(connectionStr);
 
             return sqlConn;
         }

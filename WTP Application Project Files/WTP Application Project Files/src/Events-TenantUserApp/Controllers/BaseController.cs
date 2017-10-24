@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Events_Tenant.Common.Interfaces;
+using Events_Tenant.Common.Models;
 using Events_Tenant.Common.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,13 +16,16 @@ namespace Events_TenantUserApp.Controllers
     public class BaseController : Controller
     {
         #region Fields
+
         private readonly IStringLocalizer<BaseController> _localizer;
         private readonly ITenantRepository _tenantRepository;
         private readonly IConfiguration _configuration;
+
         #endregion
 
         #region Constructors
-        public BaseController(IStringLocalizer<BaseController> localizer, ITenantRepository tenantRepository, IConfiguration configuration) 
+
+        public BaseController(IStringLocalizer<BaseController> localizer, ITenantRepository tenantRepository, IConfiguration configuration)
         {
             _localizer = localizer;
             _tenantRepository = tenantRepository;
@@ -42,11 +46,11 @@ namespace Events_TenantUserApp.Controllers
             }
         }
 
-        protected void SetTenantConfig(int tenantId, string tenantIdInString)
+        protected void SetTenantConfig(int tenantId)
         {
             var host = HttpContext.Request.Host.ToString();
 
-            var tenantConfig = PopulateTenantConfigs(tenantId, tenantIdInString, host);
+            var tenantConfig = PopulateTenantConfigs(tenantId, host);
 
             if (tenantConfig != null)
             {
@@ -76,8 +80,8 @@ namespace Events_TenantUserApp.Controllers
                             {
                                 tenantConfigs[i] = tenantConfig;
                                 HttpContext.Session.SetObjectAsJson("TenantConfigs", tenantConfigs);
+                                break;
                             }
-                            break;
                         }
                     }
                 }
@@ -88,6 +92,30 @@ namespace Events_TenantUserApp.Controllers
             }
         }
 
+        /// <summary>
+        /// This method will return the tickets model that will be used for the database inserts
+        /// </summary>
+        /// <param name="eventId">The tenant identifier.</param>
+        /// <param name="sectionId">Section Id for the tickets.</param>
+        /// <param name="numberOfTickets">Count of tickets.</param>
+        /// <param name="purchaseTicketId">Parent id for which the tickets should be tied to</param>
+        /// <returns></returns>
+        protected List<TicketModel> BuildTicketModel(int eventId, int sectionId, int numberOfTickets, int purchaseTicketId)
+        {
+            var ticketsModel = new List<TicketModel>();
+            for (var i = 0; i < numberOfTickets; i++)
+            {
+                ticketsModel.Add(new TicketModel
+                {
+                    SectionId = sectionId,
+                    EventId = eventId,
+                    TicketPurchaseId = purchaseTicketId,
+                    RowNumber = sectionId + eventId + purchaseTicketId, // ensures that the ticket purchased  row number is always unique
+                    SeatNumber = i + 1
+                });
+            }
+            return ticketsModel;
+        }
         #endregion
 
         /// <summary>
@@ -97,7 +125,7 @@ namespace Events_TenantUserApp.Controllers
         /// <param name="tenantIdInString">The tenant identifier in string.</param>
         /// <param name="host">The host.</param>
         /// <returns></returns>
-        private TenantConfig PopulateTenantConfigs(int tenantId, string tenantIdInString, string host)
+        private TenantConfig PopulateTenantConfigs(int tenantId, string host)
         {
             try
             {
@@ -113,12 +141,12 @@ namespace Events_TenantUserApp.Controllers
                 }
                 else
                 {
-                    string[] hostpieces = host.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
+                    string[] hostpieces = host.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
                     user = hostpieces[2];
                 }
 
                 //get the venue details and populate in config settings
-                var venueDetails = (_tenantRepository.GetVenueDetails(tenantId)).Result;
+                var venueDetails = (_tenantRepository.GetVenue()).Result;
                 var venueTypeDetails =
                     (_tenantRepository.GetVenueType(venueDetails.VenueType, tenantId)).Result;
                 var countries = (_tenantRepository.GetAllCountries(tenantId)).Result;
@@ -129,18 +157,19 @@ namespace Events_TenantUserApp.Controllers
 
                 return new TenantConfig
                 {
+                    DatabaseName = venueDetails.DatabaseName,
+                    DatabaseServerName = venueDetails.DatabaseServerName,
                     VenueName = venueDetails.VenueName,
                     BlobImagePath = blobPath + venueTypeDetails.VenueType + "-user.jpg",
                     EventTypeNamePlural = venueTypeDetails.EventTypeShortNamePlural.ToUpper(),
                     TenantId = tenantId,
-                    TenantName = venueDetails.DatabaseName,
+                    TenantName = venueDetails.VenueName.ToLower().Replace(" ", ""),
                     Currency = regionalInfo.CurrencySymbol,
                     TenantCulture =
                         (!string.IsNullOrEmpty(venueTypeDetails.Language)
                             ? venueTypeDetails.Language
                             : defaultCulture),
                     TenantCountries = countries,
-                    TenantIdInString = tenantIdInString,
                     User = user
                 };
             }

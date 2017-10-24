@@ -23,12 +23,9 @@ namespace Events_TenantUserApp.Tests.ControllerTests
             var mockTenantRepo = new Mock<ITenantRepository>();
             mockTenantRepo.Setup(repo => repo.GetCustomer("test@email.com", 123456)).Returns(GetCustomerAsync());
             mockTenantRepo.Setup(repo => repo.AddCustomer(GetCustomer(), 123456)).Returns(GetCustomerId());
-
-            var mockCatalogRepo = new Mock<ICatalogRepository>();
-
             var mockUtilities = new Mock<IUtilities>();
 
-            _accountController = new AccountController(localizer, baseLocalizer, mockTenantRepo.Object, mockCatalogRepo.Object, logger, configuration);
+            _accountController = new AccountController(localizer, baseLocalizer, mockTenantRepo.Object, logger, configuration);
 
         }
 
@@ -36,7 +33,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void LoginTest()
         {
             //Act
-            var result = _accountController.Login("tenantName", "test@email.com");
+            var result = _accountController.Login("test@email.com");
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -47,7 +44,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void LogoutTest()
         {
             //Act
-            var result = _accountController.Logout("tenantName", "testemail@gmail.com");
+            var result = _accountController.Logout("testemail@gmail.com");
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -60,7 +57,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         public void RegisterCustomerTest()
         {
             //Act
-            var result = _accountController.Register("tenantName", GetCustomer());
+            var result = _accountController.Register(GetCustomer());
 
             // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
@@ -69,7 +66,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
 
         private CustomerModel GetCustomer()
         {
-           return new CustomerModel
+            return new CustomerModel
             {
                 CountryCode = "USA",
                 PostalCode = "123",
@@ -83,6 +80,7 @@ namespace Events_TenantUserApp.Tests.ControllerTests
         {
             return 1;
         }
+
         private async Task<CustomerModel> GetCustomerAsync()
         {
             return new CustomerModel
@@ -94,6 +92,5 @@ namespace Events_TenantUserApp.Tests.ControllerTests
                 LastName = "lastName"
             };
         }
-
     }
 }

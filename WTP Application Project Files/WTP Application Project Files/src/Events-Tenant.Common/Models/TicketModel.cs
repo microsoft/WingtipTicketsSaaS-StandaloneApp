@@ -10,5 +10,3 @@
         public int TicketPurchaseId { get; set; }
     }
 }
-
-

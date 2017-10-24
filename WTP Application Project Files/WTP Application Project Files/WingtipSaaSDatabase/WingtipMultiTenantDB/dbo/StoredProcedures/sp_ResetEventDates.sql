@@ -1,5 +1,4 @@
-﻿-- Resets dates for events and ticket purchases for all venues 
-CREATE PROCEDURE [dbo].[sp_ResetEventDates]
+﻿CREATE PROCEDURE [dbo].[sp_ResetEventDates]
     @StartHour int = 19,
     @StartMinute int = 00
 AS

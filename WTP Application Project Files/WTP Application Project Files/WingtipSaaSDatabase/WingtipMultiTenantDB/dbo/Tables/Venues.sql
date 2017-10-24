@@ -10,5 +10,5 @@
     CONSTRAINT [FK_Venues_Countries] FOREIGN KEY ([CountryCode]) REFERENCES [Countries]([CountryCode]), 
     CONSTRAINT [FK_Venues_VenueTypes] FOREIGN KEY ([VenueType]) REFERENCES [VenueTypes]([VenueType]), 
     CONSTRAINT [PK_Venues] PRIMARY KEY ([VenueId])
-)
+);
 GO

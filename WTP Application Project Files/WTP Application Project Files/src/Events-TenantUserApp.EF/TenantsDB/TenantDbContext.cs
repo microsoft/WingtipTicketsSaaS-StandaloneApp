@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
-using Microsoft.Azure.SqlDatabase.ElasticScale.ShardManagement;
+﻿using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -18,8 +16,8 @@ namespace Events_TenantUserApp.EF.TenantsDB
         public virtual DbSet<Venue> Venue { get; set; }
         public virtual DbSet<VenueTypes> VenueTypes { get; set; }
 
-        public TenantDbContext(ShardMap shardMap, int shardingKey, string connectionStr) :
-            base(CreateDdrConnection(shardMap, shardingKey, connectionStr))
+        public TenantDbContext(string connectionStr) :
+            base(CreateDdrConnection(connectionStr))
         {
 
         }
@@ -27,21 +25,18 @@ namespace Events_TenantUserApp.EF.TenantsDB
         /// <summary>
         /// Creates the DDR (Data Dependent Routing) connection.
         /// </summary>
-        /// <param name="shardMap">The shard map.</param>
-        /// <param name="shardingKey">The sharding key.</param>
         /// <param name="connectionStr">The connection string.</param>
         /// <returns></returns>
-        private static DbContextOptions CreateDdrConnection(ShardMap shardMap, int shardingKey, string connectionStr)
+        private static DbContextOptions CreateDdrConnection(string connectionStr)
         {
             // Ask shard map to broker a validated connection for the given key
-            SqlConnection sqlConn = shardMap.OpenConnectionForKey(shardingKey, connectionStr);
+            SqlConnection sqlConn = new SqlConnection(connectionStr);
 
             var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
             var options = optionsBuilder.UseSqlServer(sqlConn).Options;
 
             return options;
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -94,6 +89,8 @@ namespace Events_TenantUserApp.EF.TenantsDB
                 entity.Property(e => e.Password).HasMaxLength(30);
 
                 entity.Property(e => e.PostalCode).HasColumnType("char(10)");
+
+                entity.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate();
 
                 entity.HasOne(d => d.CountryCodeNavigation)
                     .WithMany(p => p.Customers)
@@ -161,6 +158,8 @@ namespace Events_TenantUserApp.EF.TenantsDB
                 entity.Property(e => e.PurchaseDate).HasColumnType("datetime");
 
                 entity.Property(e => e.PurchaseTotal).HasColumnType("money");
+
+                entity.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate();
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.TicketPurchases)

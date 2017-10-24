@@ -9,4 +9,3 @@
         public decimal StandardPrice { get; set; }
     }
 }
-
