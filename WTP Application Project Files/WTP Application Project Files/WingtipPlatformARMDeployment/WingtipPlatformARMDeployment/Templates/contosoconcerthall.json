@@ -1,0 +1,36 @@
+{
+  "contentVersion": "1.0.0.0",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "parameters": {
+    "user": {
+      "type": "string",
+      "metadata": {
+        "description": "User value is used to make server and other resource names in this deployment globally unique. Use 15 characters or less, lower case letters and numbers only."
+      }
+    }
+  },
+  "variables": {
+    "lowerCaseUser": "[toLower(parameters('user'))]",
+    "tenantName": "contosoconcerthall"
+  },
+  "resources": [ 
+    { 
+        "apiVersion": "2015-01-01", 
+        "name": "[concat(variables('TenantName'))]",
+        "type": "Microsoft.Resources/deployments", 
+        "properties": { 
+            "mode": "Incremental", 
+            "templateLink": {
+            "uri": "https://wingtipsaas.blob.core.windows.net/templates-sa/wingtiptickets.json",
+            "contentVersion": "1.0.0.0"
+            }, 
+            "parameters": {
+                "tenantName": {"value": "[variables('tenantName')]"
+                },
+                "user": {"value": "[variables('lowerCaseUser')]"
+                }
+            }
+        }
+    } 
+  ]
+}
