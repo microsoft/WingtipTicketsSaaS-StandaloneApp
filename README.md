@@ -11,15 +11,9 @@ More information about the sample app and the associated tutorials is here: [htt
 
 To deploy the app to Azure, click one of the links below.  Deploy each app in a new resource group, and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  You can use the same user value for all three applications.
 
-<tr>
-    <td style="vertical-align:middle">
-        <a href="https://aka.ms/deploywingtipsa-contoso" target="_blank">
-        <img src="http://azuredeploy.net/deploybutton.png"/>
-    </td>
-    <td>
-        </a> Contoso Concert Hall
-    </td>
-</tr> 
+<a href="https://aka.ms/deploywingtipsa-contoso" target="_blank">
+<img src="http://azuredeploy.net/deploybutton.png"/>
+</a> Contoso Concert Hall
 </p>
 <a href="https://aka.ms/deploywingtipsa-fabrikam" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -29,8 +23,8 @@ To deploy the app to Azure, click one of the links below.  Deploy each app in a 
 </a> Dogwood Dojo
 
 
-After deployment completes, launch the app by browsing to the corresponding URL, substituting *USER* with the value you set during deployment: ```http://events.contosoconcerthall.USER.trafficmanager.net```
-```http://events.fabrikamjazzclub.USER.trafficmanager.net```
+After deployment completes, launch the app by browsing to the corresponding URL, substituting *USER* with the value you set during deployment: </p>```http://events.contosoconcerthall.USER.trafficmanager.net``` </p>
+```http://events.fabrikamjazzclub.USER.trafficmanager.net```</p>
 ```http://events.dogwooddojo.USER.trafficmanager.net```  
 
 **IMPORTANT:** If you download and extract the repo or [Learning Modules](https://github.com/Microsoft/WingtipSaaS/tree/master/Learning%20Modules) from a zip file, make sure you unblock the .zip file before extracting. Executable contents (scripts, dlls) may be blocked by Windows when zip files are downloaded from an external source.
