@@ -11,8 +11,8 @@ More information about the sample app and the associated tutorials is here: [htt
 
 To deploy the app to Azure, click one of the links below.  Deploy each app in a new resource group, and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  You can use the same user value for all three applications.
 
-<tr valign="middle">
-    <td>
+<tr>
+    <td style="vertical-align:middle">
         <a href="https://aka.ms/deploywingtipsa-contoso" target="_blank">
         <img src="http://azuredeploy.net/deploybutton.png"/>
     </td>
