@@ -1,4 +1,4 @@
-## Wingtip Tickets SaaS - Standalone Application Stamp
+## Wingtip Tickets SaaS - Standalone Application
 A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database. 
 
 This project contains a sample Web application and management scripts that embody common patterns used with Azure SQL Database.  It is a simple event-management and ticket-selling app for a single venue, with data stored in a single database.  As a standalone app, it could be installed in the ISV's or the venue's Azure subscription. The app uses the same patterns that might be used if the venue wrote the application for themselves.    
