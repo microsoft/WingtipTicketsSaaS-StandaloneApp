@@ -1,13 +1,25 @@
 ## Wingtip Tickets SaaS - Standalone Application
-A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database. 
+A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database.
 
-This project contains a sample Web application and management scripts that embody common patterns used with Azure SQL Database.  It is a simple event-management and ticket-selling app for a single venue, with data stored in a single database.  As a standalone app, it could be installed in the ISV's or the venue's Azure subscription. The app uses the same patterns that might be used if the venue wrote the application for themselves.    
+![Versions of Wingtip Tickets SaaS apps](./Documentation/AppVersions.PNG)
 
-The application, which includes sample data for one of three venues, can be installed in your Azure subscription within a single Azure resource group. To uninstall the application, delete the resource group using the Azure Portal. 
+Looking for one of the other SaaS app patterns? Learn more about the [Database per tenant](https://github.com/Microsoft/WingtipTicketsSaaS-DbPerTenant) and [Sharded multi-tenant](https://github.com/Microsoft/WingtipTicketsSaaS-MultiTenantDb) versions.
+
+### Wingtip Tickets SaaS app
+
+The Wingtip Tickets app is a simple event listing and ticketing SaaS app, where each venue is a tenant with events, ticket prices, customers, and ticket sales. The app, together with the management scripts and tutorials, showcases an end-to-end SaaS scenario. This includes provisioning tenants, monitoring and managing performance, schema management and cross-tenant reporting and analytics, all at scale. This application is functionally identical across all three versions repositories.
+
+### Standalone app pattern
+
+This project contains a single tenant application with a single tenant database. Each tenant’s app is deployed into a separate Azure resource group. This could be in the service provider’s subscription or the tenant’s subscription and managed by the provider on the tenant’s behalf. This pattern provides the greatest tenant isolation, but it is typically the most expensive as there is no opportunity to share resources across multiple tenants. The app uses the same patterns that might be used if the venue wrote the application for themselves.    
+
+## Get started
+
+The application, which includes sample data for one of three venues, can be installed in your Azure subscription within a single Azure resource group. To uninstall the application, delete the resource group using the Azure Portal.
 
 NOTE: if you install the application you will be charged for the Azure resources created.  Actual costs incurred are based on your subscription offer type but are nominal if the application is not scaled up unreasonably and is deleted promptly after you have finished exploring the tutorials.
 
-More information about the sample app and the associated tutorials is here: [https://aka.ms/sqldbsaastutorial](https://aka.ms/sqldbsaastutorial)
+More information about the sample app can be found in the [associated tutorials]() (available shortly).
 
 Click any of the buttons below to deploy a venue-specific version of the app to Azure. Deploy each app in a new resource group and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  You can use the same user value for all three applications.
 
