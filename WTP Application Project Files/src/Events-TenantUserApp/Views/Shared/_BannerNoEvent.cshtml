@@ -1,0 +1,26 @@
+﻿@using System.Security.Policy
+@using Events_Tenant.Common.Utilities
+@using Events_TenantUserApp
+@using Microsoft.AspNetCore.Mvc.Localization
+﻿@inject IViewLocalizer Localizer
+
+@{
+    TenantConfig tenantConfig = Context.Session.GetObjectFromJson<List<TenantConfig>>("TenantConfigs").First();
+    var blobpath = tenantConfig.BlobImagePath;
+}
+
+<div class="row">
+    <div class="col-xs-12 ">
+        <div class="banner">
+            <div class="row cover-2">
+                <img src=@blobpath class="img-responsive" style="width: 100%">
+            </div>
+            <div class="banner-home-left" style="width: 97.4%">
+                <div class="banner-caption">
+                    <span>@Localizer["No Events Available"]</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
