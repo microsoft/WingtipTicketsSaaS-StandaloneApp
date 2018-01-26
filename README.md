@@ -1,4 +1,4 @@
-## Wingtip Tickets SaaS - Standalone Application
+## Wingtip Tickets SaaS - Standalone Application (aka App-per-tenant)
 A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database.
 
 ![Versions of Wingtip Tickets SaaS apps](./Documentation/AppVersions.PNG)
@@ -9,9 +9,9 @@ Looking for one of the other SaaS app patterns? Learn more about the [Database p
 
 The Wingtip Tickets app is a simple event listing and ticketing SaaS app, where each venue is a tenant with events, ticket prices, customers, and ticket sales. The app, together with the management scripts and tutorials, showcases an end-to-end SaaS scenario. This includes provisioning tenants, monitoring and managing performance, schema management and cross-tenant reporting and analytics, all at scale. This application is functionally identical across all three versions repositories.
 
-### Standalone app pattern
+### Standalone app (aka app-per-tenant) pattern
 
-This project contains a single tenant application with a single tenant database. Each tenant’s app is deployed into a separate Azure resource group. This could be in the service provider’s subscription or the tenant’s subscription and managed by the provider on the tenant’s behalf. This pattern provides the greatest tenant isolation, but it is typically the most expensive as there is no opportunity to share resources across multiple tenants. The app uses the same patterns that might be used if the venue wrote the application for themselves.    
+This project contains a single tenant application with a single tenant database. Each tenant’s app is deployed into a separate Azure resource group. This could be in the service provider’s subscription or the tenant’s subscription and managed by the provider on the tenant’s behalf. This pattern provides the greatest tenant isolation, but is typically the most expensive from a resource cost perspective as there is no opportunity to share resources across multiple tenants. The app uses the same patterns that might be used if the venue wrote the application for themselves. While the app is a single-tenant app and so doesn't need a catalog to resolve the location of the database, a catalog can still be provisioned and used by many management scenarios, enabling, for example, schema management of all tenant databases, cross-tenant query for reporting purposes, cross-tenant analytics, etc.      
 
 ## Get started
 
@@ -21,7 +21,8 @@ NOTE: if you install the application you will be charged for the Azure resources
 
 More information about the sample app can be found in the [associated tutorials]() (available shortly).
 
-Click any of the buttons below to deploy a venue-specific version of the app to Azure. Deploy each app in a new resource group and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  You can use the same user value for all three applications.
+Click any of the buttons below to deploy a venue-specific version of the app to Azure. Deploy each app in a new resource group and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  USE THE SAME USER VALUE FOR ALL THREE APPLICATIONS if you plan to use any of the management tutorials.
+
 
 <a href="https://aka.ms/deploywingtipsa-contoso" target="_blank">
 <img src="http://azuredeploy.net/deploybutton.png"/>
