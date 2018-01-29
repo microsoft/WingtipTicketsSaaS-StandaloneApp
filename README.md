@@ -1,3 +1,4 @@
+
 ## Wingtip Tickets SaaS - Standalone Application (aka App-per-tenant)
 A sample standalone single-tenant SaaS application plus management scripts, built on Azure SQL Database.
 
@@ -19,9 +20,11 @@ The application, which includes sample data for one of three venues, can be inst
 
 NOTE: if you install the application you will be charged for the Azure resources created.  Actual costs incurred are based on your subscription offer type but are nominal if the application is not scaled up unreasonably and is deleted promptly after you have finished exploring the tutorials.
 
-More information about the sample app can be found in the [associated tutorials]() (available shortly).
+More information about the sample app can be found in the [associated tutorial](https://docs.microsoft.com/en-us/azure/sql-database/saas-standaloneapp-get-started-deploy).
 
-Click any of the buttons below to deploy a venue-specific version of the app to Azure. Deploy each app in a new resource group and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  USE THE SAME USER VALUE FOR ALL THREE APPLICATIONS if you plan to use any of the management tutorials.
+Click any of the buttons below to deploy a venue-specific version of the app to Azure. Deploy each app in a new resource group and provide a short *user* value that will be appended to resource names to make them globally unique.  Your initials and a number is a good pattern to use.  
+
+**IMPORTANT:**  USE THE SAME USER VALUE FOR ALL THREE APPLICATIONS.
 
 
 <a href="https://aka.ms/deploywingtipsa-contoso" target="_blank">
