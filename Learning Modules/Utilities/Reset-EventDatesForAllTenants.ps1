@@ -7,20 +7,22 @@
   in each database. Two events are set in the recent past, the remainder are rescheduled into the future.  
 
 #>
-param(
-    [Parameter(Mandatory=$true)]
-    [string]$WtpResourceGroupName,
-    
-    [Parameter(Mandatory=$true)]
-    [string]$WtpUser
-)
 
 Import-Module $PSScriptRoot\..\Common\CatalogAndDatabaseManagement -Force
+Import-Module "$PSScriptRoot\..\UserConfig" -Force
 
+# Get Azure credentials if not already logged on,  Use -Force to select a different subscription 
+Initialize-Subscription -NoEcho
+
+# Get the user name used when the Contoso Concert Hall application was deployed.  
+$wtpUser = Get-UserConfig
 $config = Get-Configuration
 
 # Get the catalog 
-$catalog = Get-Catalog -ResourceGroupName $WtpResourceGroupName -WtpUser $WtpUser 
+
+$catalogResourceGroupName = $config.CatalogResourceGroupNameStem + $wtpUser.Name
+ 
+$catalog = Get-Catalog -ResourceGroupName $catalogResourceGroupName -WtpUser $wtpUser.Name 
 
 $databaseLocations = Get-TenantDatabaseLocations -Catalog $catalog
 

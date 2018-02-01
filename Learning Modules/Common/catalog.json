@@ -1,0 +1,94 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "user": {
+      "type": "string",
+      "metadata": {
+        "description": "User parameter is used to make resource names unique. Use 15 characters or less."
+      }
+    }
+  },
+  "variables": {
+    "lowerCaseUser": "[toLower(parameters('user'))]",
+    "location": "[resourceGroup().location]",     
+    "catalogServerName": "[concat('catalog-sa-',variables('lowerCaseUser'))]",
+    "catalogDatabaseName": "tenantcatalog",
+    "sqlRequestedServiceObjectiveName": "S1",
+    "administratorLogin": "developer",
+    "administratorLoginPassword": "P@ssword1",
+    "catalogBacpacStorageUri": "https://wingtipsaas.blob.core.windows.net/bacpacs-sa/wingtipcatalogdb.bacpac"
+  },
+  "resources": [
+    {
+      "name": "[variables('catalogServerName')]",
+      "location": "[variables('location')]",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2015-05-01-preview",
+      "properties": {
+        "version": "12.0",
+        "administratorLogin": "[variables('administratorLogin')]",
+        "administratorLoginPassword": "[variables('administratorLoginPassword')]"
+      },
+      "resources": [
+        {
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/',variables('catalogServerName'))]"
+          ],
+          "apiVersion": "2014-04-01-preview",
+          "name": "AllowAllAzureIps",
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          },
+          "type": "firewallrules"
+        },
+        {
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/',variables('catalogServerName'))]"
+          ],
+          "apiVersion": "2014-04-01-preview",
+          "name": "Open",
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "255.255.255.255"
+          },
+          "type": "firewallrules"
+        },
+        {
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/',variables('catalogServerName'))]",
+            "[concat('Microsoft.Sql/servers/',variables('catalogServerName'),'/firewallrules/AllowAllAzureIps')]",
+            "[concat('Microsoft.Sql/servers/',variables('catalogServerName'),'/firewallrules/Open')]"
+          ],
+          "name": "[variables('catalogDatabaseName')]",
+          "location": "[variables('location')]",
+          "type": "databases",
+          "apiVersion": "2014-04-01-preview",
+          "properties": {
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[variables('sqlRequestedServiceObjectiveName')]"
+          },
+          "resources": [
+            {
+              "dependsOn": [
+                "[variables('catalogDatabaseName')]"
+              ],
+              "name": "Import",
+              "type": "extensions",
+              "apiVersion": "2014-04-01-preview",
+              "properties": {
+                "storageKeyType": "SharedAccessKey",
+                "storageKey": "?",
+                "storageUri": "[variables('catalogBacpacStorageUri')]",
+                "administratorLogin": "[concat(variables('administratorLogin'),'@',variables('catalogServerName'))]",
+                "administratorLoginPassword": "[variables('administratorLoginPassword')]",
+                "operationMode": "Import"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
