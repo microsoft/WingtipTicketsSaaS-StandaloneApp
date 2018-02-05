@@ -1,1 +1,1 @@
-﻿# Standalone App
+﻿# Standalone App per Tenant
