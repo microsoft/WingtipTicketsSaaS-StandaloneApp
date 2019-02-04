@@ -23,10 +23,10 @@
     "sqlEdition": "Standard",
     "tenantDatabaseName": "[parameters('tenantName')]",
     "tenantServer": "[concat(parameters('tenantName'),'-',variables('lowerCaseUser'))]",
-    "tenantDatabaseStorageUri": "[concat('https://wingtipsaas.blob.core.windows.net/bacpacs-sa/', parameters('tenantName'),'.bacpac')]",
+    "tenantDatabaseStorageUri": "[concat('https://wingtipsaas1.blob.core.windows.net/bacpacs-sa/', parameters('tenantName'),'.bacpac')]",
     "wtpEventsAppTrafficManagerUniqueDnsName": "[concat('events.',parameters('tenantName'),'.',variables('lowerCaseUser'))]",
     "wtpEventsApp": "[concat('events-',parameters('tenantName'),'-',variables('lowerCaseUser'))]",
-    "wtpEventsAppPackageUri": "https://wingtipsaas.blob.core.windows.net/packages-sa/eventsAppPackage.zip"
+    "wtpEventsAppPackageUri": "https://wingtipsaas1.blob.core.windows.net/packages-sa/eventsAppPackage.zip"
   },
   "resources": [
     {
@@ -148,7 +148,7 @@
           "type": "config",
           "name": "appsettings",
           "properties": {
-            "BlobPath": "https://wingtipsaas.blob.core.windows.net/images-sa/",
+            "BlobPath": "https://wingtipsaas1.blob.core.windows.net/images-sa/",
             "ConnectionTimeOut": "30",
             "DatabasePassword": "P@ssword1",
             "DatabaseServerPort": "1433",

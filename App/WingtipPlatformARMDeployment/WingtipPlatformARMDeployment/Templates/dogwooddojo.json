@@ -21,7 +21,7 @@
         "properties": { 
             "mode": "Incremental", 
             "templateLink": {
-            "uri": "https://wingtipsaas.blob.core.windows.net/templates-sa/wingtiptickets.json",
+            "uri": "https://wingtipsaas1.blob.core.windows.net/templates-sa/wingtiptickets.json",
             "contentVersion": "1.0.0.0"
             }, 
             "parameters": {
