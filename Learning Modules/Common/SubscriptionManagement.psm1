@@ -96,7 +96,7 @@ function Get-SubscriptionId
     $Azurecontext = Get-AzureRmContext
     $AzureModuleVersion = Get-Module AzureRM.Resources -list
 
-    # Check PowerShell version to accomodate breaking change in AzureRM modules greater than 4.0
+    # Check PowerShell version to accommodate breaking change in AzureRM modules greater than 4.0
     if ($AzureModuleVersion.Version.Major -ge 4)
     {
         return $Azurecontext.Subscription.Id
@@ -112,7 +112,7 @@ function Get-SubscriptionName
     $Azurecontext = Get-AzureRmContext
     $AzureModuleVersion = Get-Module AzureRM.Resources -list 
 
-    # Check PowerShell version to accomodate breaking change in AzureRM modules greater than 4.0
+    # Check PowerShell version to accommodate breaking change in AzureRM modules greater than 4.0
     if ($AzureModuleVersion.Version.Major -ge 4)
     {
         return $Azurecontext.Subscription.Name
@@ -127,7 +127,7 @@ function Get-SubscriptionList
 {
     $AzureModuleVersion = Get-Module AzureRM.Resources -list
 
-    # Check PowerShell version to accomodate breaking change in AzureRM modules greater than 4.0
+    # Check PowerShell version to accommodate breaking change in AzureRM modules greater than 4.0
     if ($AzureModuleVersion.Version.Major -ge 4)
     {
         return Get-AzureRmSubscription
@@ -152,7 +152,7 @@ function Get-TenantId
     $Azurecontext = Get-AzureRmContext
     $AzureModuleVersion = Get-Module AzureRM.Resources -list 
 
-    # Check PowerShell version to accomodate breaking change in AzureRM modules greater than 4.0
+    # Check PowerShell version to accommodate breaking change in AzureRM modules greater than 4.0
     if ($AzureModuleVersion.Version.Major -ge 4)
     {
         return $Azurecontext.Tenant.Id
